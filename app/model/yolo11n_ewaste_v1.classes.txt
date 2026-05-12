@@ -1,0 +1,14 @@
+bateria
+cabo
+capacitor
+celular
+impressora
+monitor
+mouse
+notebook
+placa_eletronica
+player
+router
+telephone
+televisao
+usb_stick

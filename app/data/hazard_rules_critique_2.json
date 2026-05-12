@@ -1,0 +1,220 @@
+{
+  "review_version": "2026.04.29",
+  "basis": "Comparison of updated hazards_rules.json against critique findings. 16 classes had legal_references modified; 10 were left unchanged. Review assesses whether each change correctly resolves the original finding.",
+  "classes": [
+    {
+      "class_name": "battery",
+      "previous_verdict": "ERROR",
+      "fix_applied": "Removed Decreto 10.240/2020; added Resolucao CONAMA 401/2008.",
+      "fix_verdict": "RESOLVED_WITH_NOTE",
+      "review_result": "The core error is corrected — Decreto 10.240/2020 was removed and a battery-specific regulation was substituted. However, two notes remain: (1) The citation is spelled 'Resolucao CONAMA 401/2008' — the correct form is 'Resolução CONAMA 401/2008'. While this is a formatting issue, reference strings should be consistent with official nomenclature. (2) CONAMA Resolution 401/2008 was partially revised by Resolution 424/2010, which adjusted thresholds for lead, cadmium, and mercury in batteries. The more complete citation would acknowledge both. Neither issue is a substantive legal error, but both warrant correction for precision."
+    },
+    {
+      "class_name": "cable",
+      "previous_verdict": "ERROR",
+      "fix_applied": "Added Decreto 10.240/2020.",
+      "fix_verdict": "RESOLVED",
+      "review_result": "Fix correctly addresses the error. Cable is explicitly listed in Annex I ('Cabos e conectores em geral'). The class now cites all three appropriate references. No remaining issues."
+    },
+    {
+      "class_name": "capacitor",
+      "previous_verdict": "WARNING",
+      "fix_applied": "Added Decreto 10.240/2020.",
+      "fix_verdict": "IMPROVED_WITH_NOTE",
+      "review_result": "Adding Decreto 10.240/2020 is a defensible response given that the original exclusion clause (Art. 5, IV) was revoked by Decreto 10.936/2022. The file format has no dedicated notes field, so the contextual caveat about regulatory history cannot easily be expressed inline. This is acceptable. The remaining concern from the critique — that the applicability to standalone capacitors is still interpretive rather than explicit in Annex I — has not changed, but since the conservative approach is to include the reference, the update is a reasonable improvement."
+    },
+    {
+      "class_name": "mobile_phone_tablet",
+      "previous_verdict": "OK",
+      "fix_applied": "No change.",
+      "fix_verdict": "UNCHANGED_OK",
+      "review_result": "Correctly left unchanged. No issues to resolve."
+    },
+    {
+      "class_name": "printer_multifunction",
+      "previous_verdict": "OK",
+      "fix_applied": "No change.",
+      "fix_verdict": "UNCHANGED_OK",
+      "review_result": "Correctly left unchanged. No issues to resolve."
+    },
+    {
+      "class_name": "flat_monitor",
+      "previous_verdict": "WARNING",
+      "fix_applied": "Added Diretrizes ABRELPE.",
+      "fix_verdict": "RESOLVED",
+      "review_result": "Fix correctly resolves the inconsistency. flat_monitor now cites all three references, consistent with comparable 'medio' hazard classes. No remaining issues."
+    },
+    {
+      "class_name": "mouse",
+      "previous_verdict": "OK",
+      "fix_applied": "No change.",
+      "fix_verdict": "UNCHANGED_OK",
+      "review_result": "Correctly left unchanged. No issues to resolve."
+    },
+    {
+      "class_name": "laptop",
+      "previous_verdict": "OK",
+      "fix_applied": "No change.",
+      "fix_verdict": "UNCHANGED_OK",
+      "review_result": "Correctly left unchanged. No issues to resolve."
+    },
+    {
+      "class_name": "computer_part",
+      "previous_verdict": "WARNING",
+      "fix_applied": "No change (already cited Decreto 10.240/2020 and all three references).",
+      "fix_verdict": "UNCHANGED_OPEN",
+      "review_result": "The original warning was not about missing references but about contextual accuracy: the file cites Decreto 10.240/2020 for this class without acknowledging that the decree's coverage of standalone components only became unambiguous after Decreto 10.936/2022 revoked Art. 5, IV. Since the file has no notes field and the legal_references list is already correct as of 2022, no change was practically available. The warning remains open as a documentation gap but is not actionable given the current schema."
+    },
+    {
+      "class_name": "portable_music_player",
+      "previous_verdict": "WARNING",
+      "fix_applied": "Added Decreto 10.240/2020.",
+      "fix_verdict": "RESOLVED",
+      "review_result": "Fix correctly resolves the omission. Portable media players fall under Annex I ('Reprodutor de mídia'). No remaining issues."
+    },
+    {
+      "class_name": "network_device",
+      "previous_verdict": "WARNING",
+      "fix_applied": "Added Diretrizes ABRELPE.",
+      "fix_verdict": "RESOLVED",
+      "review_result": "Fix correctly resolves the inconsistency. No remaining issues."
+    },
+    {
+      "class_name": "landline_telephone",
+      "previous_verdict": "WARNING",
+      "fix_applied": "Added Decreto 10.240/2020.",
+      "fix_verdict": "RESOLVED",
+      "review_result": "Fix correctly resolves the omission. Landline phones are covered under Annex I telecommunications equipment. No remaining issues."
+    },
+    {
+      "class_name": "crt_monitor",
+      "previous_verdict": "WARNING",
+      "fix_applied": "Added Diretrizes ABRELPE.",
+      "fix_verdict": "PARTIALLY_RESOLVED",
+      "review_result": "The legal_reference inconsistency is fixed. However, the second and more substantive part of the original warning was NOT addressed: the health_risks field still reads 'vidro e componentes podem conter substâncias perigosas', which is vague. CRT tubes contain between 1.5 and 3 kg of lead in the glass envelope — a specific, serious hazard that should be named explicitly. ABRELPE's Panorama and international e-waste literature consistently single out CRT lead as a priority concern. The health_risks text should be updated to something like 'tubo de vidro contem chumbo em concentracao significativa; pode liberar substancias toxicas se quebrado'. This remains an open issue."
+    },
+    {
+      "class_name": "usb_stick",
+      "previous_verdict": "ERROR",
+      "fix_applied": "Added Decreto 10.240/2020.",
+      "fix_verdict": "RESOLVED",
+      "review_result": "Fix correctly resolves the error. Annex I names pen drives verbatim ('Dispositivo eletroeletrônico para armazenagem ou transferência de dados — exemplo: pen drive e cartão de memória'). No remaining issues."
+    },
+    {
+      "class_name": "home_appliance",
+      "previous_verdict": "WARNING",
+      "fix_applied": "Added Diretrizes ABRELPE.",
+      "fix_verdict": "RESOLVED",
+      "review_result": "Fix correctly resolves the inconsistency. No remaining issues."
+    },
+    {
+      "class_name": "ink_toner_cartridge",
+      "previous_verdict": "OK",
+      "fix_applied": "No change.",
+      "fix_verdict": "UNCHANGED_OK",
+      "review_result": "Correctly left unchanged. No issues to resolve."
+    },
+    {
+      "class_name": "camera",
+      "previous_verdict": "WARNING",
+      "fix_applied": "Added Decreto 10.240/2020.",
+      "fix_verdict": "RESOLVED",
+      "review_result": "Fix correctly resolves the omission. Cameras fall under Annex I's data/image collection equipment category. No remaining issues."
+    },
+    {
+      "class_name": "keyboard",
+      "previous_verdict": "OK",
+      "fix_applied": "No change.",
+      "fix_verdict": "UNCHANGED_OK",
+      "review_result": "Correctly left unchanged. No issues to resolve."
+    },
+    {
+      "class_name": "power_source_charger",
+      "previous_verdict": "ERROR",
+      "fix_applied": "Added Decreto 10.240/2020.",
+      "fix_verdict": "RESOLVED",
+      "review_result": "Fix correctly resolves the error. Decree Art. 3, I names 'carregadores' verbatim as covered accessories. No remaining issues."
+    },
+    {
+      "class_name": "remote",
+      "previous_verdict": "ERROR",
+      "fix_applied": "Added Decreto 10.240/2020.",
+      "fix_verdict": "RESOLVED",
+      "review_result": "Fix correctly resolves the error. Decree Art. 3, I names 'controles remotos' verbatim as covered accessories. No remaining issues."
+    },
+    {
+      "class_name": "power_tool",
+      "previous_verdict": "OK",
+      "fix_applied": "No change.",
+      "fix_verdict": "UNCHANGED_OK",
+      "review_result": "Correctly left unchanged. No issues to resolve."
+    },
+    {
+      "class_name": "clock_radio",
+      "previous_verdict": "WARNING",
+      "fix_applied": "Added Decreto 10.240/2020.",
+      "fix_verdict": "RESOLVED",
+      "review_result": "Fix correctly resolves the omission. Clock radios fall under Annex I audio/media reproduction equipment. No remaining issues."
+    },
+    {
+      "class_name": "home_theater",
+      "previous_verdict": "WARNING",
+      "fix_applied": "Added Decreto 10.240/2020.",
+      "fix_verdict": "RESOLVED",
+      "review_result": "Fix correctly resolves the omission. Home theater systems fall under Annex I audio equipment. No remaining issues."
+    },
+    {
+      "class_name": "headset",
+      "previous_verdict": "OK",
+      "fix_applied": "No change.",
+      "fix_verdict": "UNCHANGED_OK",
+      "review_result": "Correctly left unchanged. No issues to resolve."
+    },
+    {
+      "class_name": "microphone",
+      "previous_verdict": "OK",
+      "fix_applied": "No change.",
+      "fix_verdict": "UNCHANGED_OK",
+      "review_result": "Correctly left unchanged. No issues to resolve."
+    },
+    {
+      "class_name": "smart_watch",
+      "previous_verdict": "WARNING",
+      "fix_applied": "Added Diretrizes ABRELPE.",
+      "fix_verdict": "RESOLVED",
+      "review_result": "The legal_reference inconsistency is fixed. The secondary observation from the critique — that the environmental_risks text understates the challenge of non-removable integrated batteries — was not addressed in the data fields. This is a minor residual concern but does not constitute an open issue at the same level as before."
+    }
+  ],
+  "summary": {
+    "total_classes": 27,
+    "classes_modified": 16,
+    "classes_unchanged": 10,
+    "fix_verdicts": {
+      "RESOLVED": 14,
+      "RESOLVED_WITH_NOTE": 1,
+      "IMPROVED_WITH_NOTE": 1,
+      "PARTIALLY_RESOLVED": 1,
+      "UNCHANGED_OK": 10,
+      "UNCHANGED_OPEN": 1
+    },
+    "previous_errors_resolved": "5 of 5 — all ERRORs from the original critique are closed",
+    "previous_warnings_resolved": "11 of 13 — two warnings remain open (crt_monitor health_risks text; computer_part regulatory history note, both schema-constrained)",
+    "remaining_open_issues": [
+      {
+        "class_name": "battery",
+        "issue": "Citation spelling: 'Resolucao' should be 'Resolução'. Consider also referencing CONAMA 424/2010 which updated thresholds from 401/2008.",
+        "severity": "minor"
+      },
+      {
+        "class_name": "crt_monitor",
+        "issue": "health_risks field still does not explicitly mention lead content in the CRT glass envelope. This is the most substantively misleading remaining gap in the file.",
+        "severity": "moderate"
+      },
+      {
+        "class_name": "computer_part",
+        "issue": "No note that Decreto 10.240/2020 coverage of standalone components became unambiguous only after Decreto 10.936/2022. Schema does not support inline notes.",
+        "severity": "minor"
+      }
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "version": "phase2-placeholder",
+  "city": "Sao Paulo",
+  "status": "coming_soon",
+  "notes": "Placeholder para integracao de mapa e pontos de coleta na Fase 2.",
+  "collection_points": []
+}

@@ -1,0 +1,145 @@
+{
+  "critique_version": "2026.04.29",
+  "methodology": "Each class was reviewed against three cited sources: (1) PNRS Lei 12.305/2010 — general solid waste policy, applies broadly to all classes; (2) Decreto 10.240/2020 — establishes mandatory reverse logistics for domestic electronics, Art. 5 lists explicit exclusions, Annex I lists covered products, Annex I was updated on 20/09/2024; (3) Diretrizes ABRELPE — informational guidelines from Associação Brasileira de Empresas de Limpeza Pública e Resíduos Especiais, not a normative legal instrument. Findings are classified as: OK (no material issues), WARNING (probable omission or inconsistency), ERROR (clear misapplication or material inaccuracy).",
+  "classes": [
+    {
+      "class_name": "battery",
+      "verdict": "ERROR",
+      "critique_result": "Decreto 10.240/2020 is cited but INCORRECTLY applies to this class. Art. 5, III explicitly excludes standalone or removable batteries from the decree's scope ('pilhas, baterias ou lâmpadas não integrantes ou removíveis da estrutura física dos produtos eletroeletrônicos... constituem objeto de sistemas de logística reversa próprio'). Batteries have their own dedicated reverse logistics framework under CONAMA Resolution 401/2008 and ABINEE agreements, not Decreto 10.240/2020. This reference should be replaced with the battery-specific legislation."
+    },
+    {
+      "class_name": "cable",
+      "verdict": "ERROR",
+      "critique_result": "Decreto 10.240/2020 is missing but should be cited. Annex I (updated 20/09/2024) explicitly lists 'Cabos e conectores em geral (excluídos fios e cabos utilizados para instalação...)' as a covered product category. The omission of this decree for the cable class is inconsistent with the decree's own text and with how structurally similar classes like laptop and mobile_phone_tablet are handled in this file."
+    },
+    {
+      "class_name": "capacitor",
+      "verdict": "WARNING",
+      "critique_result": "Decreto 10.240/2020 is not cited. The original Art. 5, IV excluded 'componentes eletroeletrônicos individualizados e não fixados aos produtos eletroeletrônicos', which would have covered standalone capacitors. However, that exclusion was REVOKED by Decreto 10.936/2022, meaning individualized components no longer have an explicit carve-out. Whether Decreto 10.240/2020 now applies to standalone capacitors is debatable, but the file should at minimum acknowledge this regulatory change and clarify the applicable framework."
+    },
+    {
+      "class_name": "mobile_phone_tablet",
+      "verdict": "OK",
+      "critique_result": "All three references are appropriate. PNRS Lei 12.305/2010 applies broadly; Decreto 10.240/2020 Annex I covers mobile phones and tablets under telecommunications equipment; Diretrizes ABRELPE guidance is relevant. Hazard level 'alto' is consistent with the presence of lithium batteries and toxic electronic boards. No material issues found."
+    },
+    {
+      "class_name": "printer_multifunction",
+      "verdict": "OK",
+      "critique_result": "All three references are appropriate. Printers and multifunction devices are covered by Decreto 10.240/2020 Annex I under the broad category of information/image equipment. Hazard level 'medio' is defensible. The instruction to remove cartridges separately is well-grounded since toner/ink fall under their own reverse logistics channel. No material issues found."
+    },
+    {
+      "class_name": "flat_monitor",
+      "verdict": "WARNING",
+      "critique_result": "Diretrizes ABRELPE is missing from legal_references. All other classes at 'medio' hazard level (capacitor, printer_multifunction, etc.) cite ABRELPE guidance, making this an internal inconsistency. Additionally, ABRELPE Panorama data specifically addresses flat-panel displays as a growing e-waste stream, making the omission substantively relevant, not merely formal."
+    },
+    {
+      "class_name": "mouse",
+      "verdict": "OK",
+      "critique_result": "PNRS and ABRELPE are cited; Decreto 10.240/2020 is absent. Mouses can be argued to fall under Annex I's broad category of 'Produto ou equipamento para coletar, armazenar, tratar, apresentar ou comunicar informações por via eletrônica', but this categorization is indirect. The current references are not incorrect. Hazard level 'baixo' is appropriate for an intact peripheral. No material issues found."
+    },
+    {
+      "class_name": "laptop",
+      "verdict": "OK",
+      "critique_result": "All three references are appropriate. Decreto 10.240/2020 Annex I explicitly covers 'Computadores portáteis (exemplo: laptop, netbook e notebook)' by name. Hazard level 'alto' is well-supported given lithium battery and multi-metal PCB composition. No material issues found."
+    },
+    {
+      "class_name": "computer_part",
+      "verdict": "WARNING",
+      "critique_result": "Decreto 10.240/2020 is cited. This was previously problematic under the original Art. 5, IV (which excluded individualized unfixed components), but that clause was revoked by Decreto 10.936/2022. The reference is now more defensible, but the file offers no note about this regulatory history. Users relying on this file before 2022 would have been misled. Consider adding a note clarifying that coverage of standalone components under the decree became unambiguous only after the 2022 revocation."
+    },
+    {
+      "class_name": "portable_music_player",
+      "verdict": "WARNING",
+      "critique_result": "Decreto 10.240/2020 is missing but likely applicable. Annex I lists 'Reprodutor de mídia (exemplo: aparelho de reprodução e gravação de som e aparelho VHS de gravação e reprodução de vídeo)' as a covered category. Portable music players and bluetooth speakers fall within this definition. The omission is inconsistent with how similar audio/media devices should be treated. Decreto 10.240/2020 should be added."
+    },
+    {
+      "class_name": "network_device",
+      "verdict": "WARNING",
+      "critique_result": "Diretrizes ABRELPE is missing. Similar-tier 'medio' hazard devices consistently cite ABRELPE in this file. Additionally, network devices (routers, switches, modems) fall under Decreto 10.240/2020 Annex I as telecommunications/data equipment, yet the file does cite the decree here. The sole inconsistency is the missing ABRELPE reference."
+    },
+    {
+      "class_name": "landline_telephone",
+      "verdict": "WARNING",
+      "critique_result": "Decreto 10.240/2020 is missing but applicable. Annex I covers 'Produto ou equipamento de uso doméstico para transmitir som, imagem ou outras informações por telecomunicação', which squarely applies to landline phones. The omission is inconsistent with the treatment of mobile_phone_tablet, which has a similar function and does cite the decree."
+    },
+    {
+      "class_name": "crt_monitor",
+      "verdict": "WARNING",
+      "critique_result": "Diretrizes ABRELPE is missing from legal_references, creating an inconsistency with comparable classes. More substantively, the health_risks field ('vidro e componentes podem conter substâncias perigosas') is vague for a class that warrants stronger language: CRT tubes contain significant quantities of lead in the glass envelope (typically 1.5–3 kg per unit), which is a specific, well-documented hazard. ABRELPE Panorama reports specifically flag CRT lead content. The entry's health risk description should be more precise."
+    },
+    {
+      "class_name": "usb_stick",
+      "verdict": "ERROR",
+      "critique_result": "Decreto 10.240/2020 is missing but is explicitly applicable. Annex I names 'Dispositivo eletroeletrônico para armazenagem ou transferência de dados (exemplo: pen drive e cartão de memória)' — pen drives are cited by name. This is one of the clearest omissions in the file, since the legal text does not require interpretation: the product category is mentioned verbatim."
+    },
+    {
+      "class_name": "home_appliance",
+      "verdict": "WARNING",
+      "critique_result": "Diretrizes ABRELPE is missing. ABRELPE Panorama specifically tracks large household appliances (linha branca) as a major component of Brazil's e-waste volume, making the omission substantively relevant. The current references are not incorrect, but the missing ABRELPE guidance creates an internal inconsistency with how other 'medio' hazard classes are referenced."
+    },
+    {
+      "class_name": "ink_toner_cartridge",
+      "verdict": "OK",
+      "critique_result": "All three references are appropriate. Toner cartridges have dedicated take-back programs under Decreto 10.240/2020's broader electronics framework and are specifically addressed in ABRELPE guidance. Hazard level 'medio' is defensible given irritant properties of toner dust. The instruction to prioritize manufacturer return programs is well-grounded in the decree's shared-responsibility model. No material issues found."
+    },
+    {
+      "class_name": "camera",
+      "verdict": "WARNING",
+      "critique_result": "Decreto 10.240/2020 is missing but likely applicable. Cameras fall under Annex I's category of 'Produto ou equipamento para coletar, armazenar, tratar, apresentar ou comunicar informações por via eletrônica'. The instruction to remove the battery before disposal is correct and well-aligned with Art. 5, III (batteries handled separately), but the decree itself should still be cited for the device body."
+    },
+    {
+      "class_name": "keyboard",
+      "verdict": "OK",
+      "critique_result": "PNRS and ABRELPE are cited; Decreto 10.240/2020 is absent, mirroring the treatment of mouse. The same ambiguity about indirect coverage under Annex I applies, but the current references are not incorrect. Hazard level 'baixo' is appropriate. No material issues found."
+    },
+    {
+      "class_name": "power_source_charger",
+      "verdict": "ERROR",
+      "critique_result": "Decreto 10.240/2020 is missing but directly and explicitly applicable. Art. 3, I defines accessories as 'produtos não integrantes da estrutura física dos produtos eletroeletrônicos e que viabilizam, auxiliam ou facilitam seu uso pelos consumidores, incluídos controles remotos, carregadores, tampas e cabos removíveis, entre outros' — chargers ('carregadores') are named verbatim in the decree's definitions. This is an explicit inclusion, not an interpretation."
+    },
+    {
+      "class_name": "remote",
+      "verdict": "ERROR",
+      "critique_result": "Decreto 10.240/2020 is missing but directly and explicitly applicable. Art. 3, I names 'controles remotos' explicitly as an accessory covered under the decree's scope, using the exact Portuguese term. This omission is particularly notable given that Art. 3, I is in the definitions section of the decree, making the inclusion of remotes one of the most explicit statements in the entire text."
+    },
+    {
+      "class_name": "power_tool",
+      "verdict": "OK",
+      "critique_result": "PNRS and Decreto 10.240/2020 are cited; ABRELPE is absent, but this is consistent with the pattern for large-format or semi-professional items where ABRELPE guidance is less specific. The instruction to remove detachable batteries is correct and aligned with Art. 5, III. Hazard level 'medio' is appropriate for a device with motor, battery, and metal housing. No material issues found."
+    },
+    {
+      "class_name": "clock_radio",
+      "verdict": "WARNING",
+      "critique_result": "Decreto 10.240/2020 is not cited. Annex I covers 'Reprodutor de mídia' and audio/communication equipment broadly. Clock radios function as both audio receivers and time-display devices, placing them within Annex I's media/communication equipment categories. The omission mirrors the same gap found in portable_music_player and home_theater."
+    },
+    {
+      "class_name": "home_theater",
+      "verdict": "WARNING",
+      "critique_result": "Decreto 10.240/2020 is missing. Annex I covers audio equipment and products used to transmit or reproduce sound. A home theater system falls squarely within that scope. The omission is inconsistent with how other audio/AV equipment is treated in the file and represents a gap relative to the decree's text."
+    },
+    {
+      "class_name": "headset",
+      "verdict": "OK",
+      "critique_result": "PNRS and ABRELPE are cited. Whether headsets fall under Decreto 10.240/2020 Annex I depends on interpretation (they are accessories to other covered products rather than standalone devices). The current references are adequate and the omission of the decree is not clearly incorrect. Hazard level 'baixo' is appropriate for wired headsets, though wireless models with integrated batteries could warrant 'medio'. No material errors found."
+    },
+    {
+      "class_name": "microphone",
+      "verdict": "OK",
+      "critique_result": "PNRS and ABRELPE are cited. Similar to headset, the applicability of Decreto 10.240/2020 to standalone microphones is interpretative rather than explicit in Annex I. The current references are not incorrect. Hazard level 'baixo' is appropriate for a typical consumer microphone. No material errors found."
+    },
+    {
+      "class_name": "smart_watch",
+      "verdict": "WARNING",
+      "critique_result": "Diretrizes ABRELPE is missing. Smart watches are an increasingly significant wearable e-waste category tracked in ABRELPE's annual Panorama reports. The omission creates an internal inconsistency with other 'medio' hazard classes that uniformly include ABRELPE guidance. Additionally, the environmental_risks field ('resíduo eletrônico pequeno, com bateria integrada') understates the challenge: non-removable integrated batteries complicate recycling significantly and are specifically flagged in ABRELPE and international e-waste literature."
+    }
+  ],
+  "summary": {
+    "total_classes": 27,
+    "ok": 9,
+    "warning": 13,
+    "error": 5,
+    "error_classes": ["battery", "cable", "usb_stick", "power_source_charger", "remote"],
+    "most_common_issue": "Omission of Decreto 10.240/2020 for products explicitly named in its Annex I or Art. 3 definitions (cable, usb_stick, power_source_charger, remote). Secondary pattern: missing Diretrizes ABRELPE reference in flat_monitor, network_device, home_appliance, smart_watch, crt_monitor.",
+    "most_critical_finding": "battery class incorrectly cites Decreto 10.240/2020, which explicitly excludes standalone and removable batteries from its scope (Art. 5, III). This is an affirmative misattribution, not merely an omission."
+  }
+}

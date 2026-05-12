@@ -1,0 +1,171 @@
+{
+  "content_version": "2026.04.15",
+  "classes": [
+    {
+      "class_name": "celular",
+      "hazard_level": "alto",
+      "health_risks": "bateria de litio e placa interna podem conter substancias toxicas quando danificadas",
+      "environmental_risks": "contaminacao de solo e agua por metais e eletronicos",
+      "typical_contents": ["bateria de litio", "placa eletronica", "plasticos", "metais"],
+      "disposal_instructions_br": [
+        "Nao descarte no lixo comum.",
+        "Se possivel, remova dados pessoais antes do descarte.",
+        "Entregue em ponto de logistica reversa de eletronicos."
+      ],
+      "legal_references": [
+        "PNRS Lei 12.305/2010",
+        "Decreto 10.240/2020",
+        "Diretrizes ABRELPE"
+      ]
+    },
+    {
+      "class_name": "notebook",
+      "hazard_level": "alto",
+      "health_risks": "bateria e componentes internos podem conter metais e compostos perigosos",
+      "environmental_risks": "alto potencial de contaminacao ambiental se descartado incorretamente",
+      "typical_contents": ["bateria", "placa eletronica", "aluminio", "plasticos"],
+      "disposal_instructions_br": [
+        "Nao desmonte o equipamento para descarte domestico.",
+        "Armazene em local seco ate o envio.",
+        "Leve para coleta autorizada de residuos eletroeletronicos."
+      ],
+      "legal_references": [
+        "PNRS Lei 12.305/2010",
+        "Decreto 10.240/2020",
+        "Diretrizes ABRELPE"
+      ]
+    },
+    {
+      "class_name": "tablet",
+      "hazard_level": "medio",
+      "health_risks": "bateria e tela podem liberar materiais nocivos quando rompidos",
+      "environmental_risks": "contaminacao por metais e componentes eletronicos",
+      "typical_contents": ["bateria", "tela", "placa eletronica", "plasticos"],
+      "disposal_instructions_br": [
+        "Nao jogue em lixo comum.",
+        "Evite quebrar a tela.",
+        "Descarte em ponto de recebimento de e-lixo."
+      ],
+      "legal_references": [
+        "PNRS Lei 12.305/2010",
+        "Decreto 10.240/2020"
+      ]
+    },
+    {
+      "class_name": "televisao",
+      "hazard_level": "alto",
+      "health_risks": "componentes internos podem conter substancias perigosas",
+      "environmental_risks": "grande volume de material com risco de contaminacao se mal descartado",
+      "typical_contents": ["placa eletronica", "cabos", "plasticos", "metais"],
+      "disposal_instructions_br": [
+        "Nao quebre o aparelho.",
+        "Procure coleta municipal ou ponto especializado para equipamentos grandes.",
+        "Encaminhe para cooperativa ou ponto de coleta de eletroeletronicos."
+      ],
+      "legal_references": [
+        "PNRS Lei 12.305/2010",
+        "Decreto 10.240/2020",
+        "Diretrizes ABRELPE"
+      ]
+    },
+    {
+      "class_name": "carregador",
+      "hazard_level": "medio",
+      "health_risks": "componentes eletricos podem aquecer ou liberar materiais se danificados",
+      "environmental_risks": "descartado no lixo comum vira residuo eletronico contaminante",
+      "typical_contents": ["placa eletronica", "metais", "plasticos", "cabo eletrico"],
+      "disposal_instructions_br": [
+        "Nao descarte junto ao lixo organico.",
+        "Agrupe com outros acessorios eletronicos.",
+        "Entregue em ponto de coleta de pequenos eletroeletronicos."
+      ],
+      "legal_references": [
+        "PNRS Lei 12.305/2010",
+        "Diretrizes ABRELPE"
+      ]
+    },
+    {
+      "class_name": "impressora",
+      "hazard_level": "medio",
+      "health_risks": "cartuchos e componentes internos podem conter residuos quimicos",
+      "environmental_risks": "descarte incorreto gera contaminacao por plastico e metais",
+      "typical_contents": ["placa eletronica", "plasticos", "metais", "cartucho/tinta"],
+      "disposal_instructions_br": [
+        "Retire cartuchos quando possivel para descarte adequado.",
+        "Nao descartar em lixo comum.",
+        "Leve a ecopontos ou programas de logistica reversa."
+      ],
+      "legal_references": [
+        "PNRS Lei 12.305/2010",
+        "Decreto 10.240/2020",
+        "Diretrizes ABRELPE"
+      ]
+    },
+    {
+      "class_name": "bateria",
+      "hazard_level": "alto",
+      "health_risks": "pode liberar metais pesados e compostos toxicos quando perfurada ou danificada",
+      "environmental_risks": "alto risco de contaminacao de solo e agua",
+      "typical_contents": ["litio", "niquel", "cobalto", "invólucro metalico"],
+      "disposal_instructions_br": [
+        "Nao perfure, aqueça ou abra a bateria.",
+        "Isole os terminais com fita se estiver avariada.",
+        "Entregue em ponto de logistica reversa de pilhas e baterias."
+      ],
+      "legal_references": [
+        "PNRS Lei 12.305/2010",
+        "Decreto 10.240/2020",
+        "Diretrizes ABRELPE"
+      ]
+    },
+    {
+      "class_name": "placa_eletronica",
+      "hazard_level": "alto",
+      "health_risks": "pode conter chumbo, estanho e outros componentes toxicos",
+      "environmental_risks": "descarte inadequado libera contaminantes persistentes",
+      "typical_contents": ["fibra de vidro", "cobre", "solda metalica", "componentes eletronicos"],
+      "disposal_instructions_br": [
+        "Nao queime nem descarte em lixo comum.",
+        "Mantenha separada de residuos organicos.",
+        "Leve para coleta especializada em e-lixo."
+      ],
+      "legal_references": [
+        "PNRS Lei 12.305/2010",
+        "Decreto 10.240/2020",
+        "Diretrizes ABRELPE"
+      ]
+    },
+    {
+      "class_name": "capacitor",
+      "hazard_level": "medio",
+      "health_risks": "pode conter residuos quimicos internos e risco de vazamento",
+      "environmental_risks": "contaminacao local se rompido ou descartado incorretamente",
+      "typical_contents": ["eletrólito", "aluminio", "revestimento plastico"],
+      "disposal_instructions_br": [
+        "Nao perfure ou esmague o componente.",
+        "Armazene em recipiente fechado ate descarte.",
+        "Entregue em ponto de coleta de eletroeletronicos."
+      ],
+      "legal_references": [
+        "PNRS Lei 12.305/2010",
+        "Diretrizes ABRELPE"
+      ]
+    },
+    {
+      "class_name": "cabo",
+      "hazard_level": "baixo",
+      "health_risks": "baixo risco direto quando intacto",
+      "environmental_risks": "queima de isolamento plastico libera gases toxicos",
+      "typical_contents": ["cobre", "PVC/plastico", "conectores metalicos"],
+      "disposal_instructions_br": [
+        "Nao queime para recuperar cobre.",
+        "Agrupe com outros residuos eletroeletronicos.",
+        "Encaminhe para cooperativa ou ponto de coleta autorizado."
+      ],
+      "legal_references": [
+        "PNRS Lei 12.305/2010",
+        "Diretrizes ABRELPE"
+      ]
+    }
+  ]
+}
