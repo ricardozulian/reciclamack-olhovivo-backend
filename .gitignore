@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 .pytest_cache/
+pytest-of-*/
 .mypy_cache/
 .ruff_cache/
 .coverage
@@ -26,4 +27,3 @@ app/*.db
 Thumbs.db
 .vscode/
 .idea/
-
