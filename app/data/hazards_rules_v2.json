@@ -1,265 +1,601 @@
 {
-  "content_version": "2026.04.29c",
-  "classes": [
-    {
-      "class_name": "battery",
-      "display_label_pt_br": "bateria",
-      "hazard_level": "alto",
-      "health_risks": "pode liberar metais e compostos tóxicos quando perfurada ou superaquecida",
-      "environmental_risks": "alto risco de contaminação de solo e agua",
-      "typical_contents": ["lítio", "níquel", "cobalto", "invólucro metalico"],
-      "disposal_instructions_br": ["Não descarte no lixo comum.", "Isole terminais se a bateria estiver danificada.", "Entregue em ponto de logística reversa de pilhas e baterias."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Resolução CONAMA 401/2008 (atualizada pela Resolução CONAMA 424/2010)", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "cable",
-      "display_label_pt_br": "cabo",
-      "hazard_level": "baixo",
-      "health_risks": "baixo risco direto quando intacto",
-      "environmental_risks": "queima do isolamento pode liberar gases tóxicos",
-      "typical_contents": ["cobre", "plastico", "conectores metalicos"],
-      "disposal_instructions_br": ["Não queime cabos para retirar cobre.", "Agrupe com outros eletrônicos pequenos.", "Encaminhe para coleta autorizada de e-lixo."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Decreto 10.240/2020", "Decreto 10.936/2022", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "capacitor",
-      "display_label_pt_br": "capacitor",
-      "hazard_level": "medio",
-      "health_risks": "pode vazar resíduos químicos quando rompido",
-      "environmental_risks": "contaminação local se descartado incorretamente",
-      "typical_contents": ["eletrolito", "aluminio", "revestimento plastico"],
-      "disposal_instructions_br": ["Não perfure ou esmague.", "Armazene em recipiente fechado ate descarte.", "Leve para ponto de coleta de resíduos eletroeletrônicos."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Decreto 10.240/2020", "Decreto 10.936/2022", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "mobile_phone_tablet",
-      "display_label_pt_br": "celular e tablet",
-      "hazard_level": "alto",
-      "health_risks": "bateria e placa interna podem conter substâncias toxicas",
-      "environmental_risks": "contaminação por metais e compostos eletrônicos",
-      "typical_contents": ["bateria de lítio", "placa eletronica", "vidro", "plasticos"],
-      "disposal_instructions_br": ["Não descarte no lixo comum.", "Se possível, remova dados pessoais antes do descarte.", "Entregue em ponto de logística reversa de eletrônicos."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Decreto 10.240/2020", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "printer_multifunction",
-      "display_label_pt_br": "impressora e multifuncional",
-      "hazard_level": "medio",
-      "health_risks": "cartuchos e componentes internos podem conter resíduos químicos",
-      "environmental_risks": "descarte incorreto gera contaminação por plastico e metais",
-      "typical_contents": ["placa eletronica", "plasticos", "metais", "cartucho ou tinta"],
-      "disposal_instructions_br": ["Não descarte no lixo comum.", "Retire cartuchos quando possível para descarte correto.", "Leve a ecoponto ou programa de logística reversa."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Decreto 10.240/2020", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "flat_monitor",
-      "display_label_pt_br": "monitor plano",
-      "hazard_level": "medio",
-      "health_risks": "tela e componentes eletricos podem liberar resíduos quando quebrados",
-      "environmental_risks": "volume de plastico e metais com risco de contaminação",
-      "typical_contents": ["painel LCD ou LED", "placa eletronica", "plasticos", "metais"],
-      "disposal_instructions_br": ["Não quebre a tela.", "Armazene em local seco ate descarte.", "Encaminhe para ponto de coleta de eletrônicos."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Decreto 10.240/2020", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "mouse",
-      "display_label_pt_br": "mouse",
-      "hazard_level": "baixo",
-      "health_risks": "baixo risco quando intacto",
-      "environmental_risks": "resíduo plastico e eletrônico se descartado no lixo comum",
-      "typical_contents": ["placa eletronica", "plastico", "sensor", "cabo ou bateria"],
-      "disposal_instructions_br": ["Não descarte no lixo comum.", "Agrupe com perifericos pequenos.", "Entregue em ponto de coleta de eletroeletrônicos."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "laptop",
-      "display_label_pt_br": "notebook",
-      "hazard_level": "alto",
-      "health_risks": "bateria e placa podem conter compostos perigosos",
-      "environmental_risks": "alto potencial de contaminação ambiental",
-      "typical_contents": ["bateria", "placa eletronica", "aluminio", "plasticos"],
-      "disposal_instructions_br": ["Não desmonte para descarte domestico.", "Armazene em local seco ate envio.", "Leve para coleta autorizada de e-lixo."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Decreto 10.240/2020", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "computer_part",
-      "display_label_pt_br": "componente de computador",
-      "hazard_level": "alto",
-      "health_risks": "placas e componentes podem conter metais e resíduos tóxicos",
-      "environmental_risks": "contaminação persistente se descartado incorretamente",
-      "typical_contents": ["placa eletronica", "solda metalica", "cobre", "plasticos"],
-      "disposal_instructions_br": ["Não queime nem descarte no lixo comum.", "Mantenha separado de resíduos orgânicos.", "Entregue em coleta especializada de e-lixo."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Decreto 10.240/2020", "Decreto 10.936/2022", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "portable_music_player",
-      "display_label_pt_br": "caixa de som e player portatil",
-      "hazard_level": "medio",
-      "health_risks": "bateria interna e eletricos podem gerar risco quando danificados",
-      "environmental_risks": "descarte inadequado contamina solo por plastico e metais",
-      "typical_contents": ["alto-falante", "placa eletronica", "bateria", "plasticos"],
-      "disposal_instructions_br": ["Não descarte no lixo comum.", "Evite perfurar baterias internas.", "Leve para ponto de coleta de eletrônicos pequenos."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Decreto 10.240/2020", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "network_device",
-      "display_label_pt_br": "dispositivo de rede",
-      "hazard_level": "medio",
-      "health_risks": "componentes eletricos e fonte interna podem conter materiais nocivos",
-      "environmental_risks": "resíduo eletrônico contaminante em descarte comum",
-      "typical_contents": ["placa eletronica", "antenas", "plasticos", "metais"],
-      "disposal_instructions_br": ["Não descarte no lixo comum.", "Remova cabos e fontes destacaveis quando possível.", "Encaminhe para logística reversa de eletrônicos."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Decreto 10.240/2020", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "landline_telephone",
-      "display_label_pt_br": "telefone fixo",
-      "hazard_level": "baixo",
-      "health_risks": "baixo risco direto quando intacto",
-      "environmental_risks": "gera resíduo plastico e eletrônico se descartado incorretamente",
-      "typical_contents": ["placa eletronica", "plastico", "cabo", "teclado"],
-      "disposal_instructions_br": ["Não descarte no lixo comum.", "Agrupe com pequenos eletrônicos.", "Leve a ponto de coleta autorizado."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Decreto 10.240/2020", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "crt_monitor",
-      "display_label_pt_br": "monitor CRT e televisao de tubo",
-      "hazard_level": "alto",
-      "health_risks": "tubos CRT podem conter grandes quantidades de chumbo no vidro e em componentes internos",
-      "environmental_risks": "alto impacto por volume e composição do equipamento",
-      "typical_contents": ["tubo de vidro", "placa eletronica", "metais", "cabos"],
-      "disposal_instructions_br": ["Não quebre o equipamento.", "Não descarte em lixo comum.", "Procure coleta municipal especializada para eletrônicos grandes."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Decreto 10.240/2020", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "usb_stick",
-      "display_label_pt_br": "pendrive",
-      "hazard_level": "baixo",
-      "health_risks": "baixo risco direto para usuário",
-      "environmental_risks": "resíduo eletrônico pequeno mas persistente",
-      "typical_contents": ["memoria flash", "placa eletronica", "plastico", "conector metalico"],
-      "disposal_instructions_br": ["Não descarte no lixo comum.", "Agrupe com perifericos pequenos.", "Descarte em ponto de coleta de e-lixo."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Decreto 10.240/2020", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "home_appliance",
-      "display_label_pt_br": "eletrodomestico",
-      "hazard_level": "medio",
-      "health_risks": "componentes eletricos e motores podem conter materiais nocivos",
-      "environmental_risks": "equipamentos volumosos aumentam risco de descarte irregular",
-      "typical_contents": ["motor", "cabos", "placas eletronicas", "metais"],
-      "disposal_instructions_br": ["Não descarte em lixo comum ou entulho.", "Solicite coleta específica quando o item for grande.", "Entregue em ecoponto com recebimento de eletrodomesticos."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Decreto 10.240/2020", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "ink_toner_cartridge",
-      "display_label_pt_br": "cartucho de tinta e toner",
-      "hazard_level": "medio",
-      "health_risks": "po de toner e tinta podem irritar pele e vias respiratorias",
-      "environmental_risks": "contaminação por resíduos químicos e plastico",
-      "typical_contents": ["po de toner ou tinta", "plastico", "chips", "partes metalicas"],
-      "disposal_instructions_br": ["Não descarte no lixo comum.", "Acondicione em saco fechado para evitar vazamento.", "Priorize programas de retorno de fabricantes e revendas."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Decreto 10.240/2020", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "camera",
-      "display_label_pt_br": "camera",
-      "hazard_level": "medio",
-      "health_risks": "bateria e eletrônicos internos podem causar risco quando danificados",
-      "environmental_risks": "resíduo eletrônico com metais e plasticos",
-      "typical_contents": ["sensor", "placa eletronica", "lente", "bateria"],
-      "disposal_instructions_br": ["Não descarte no lixo comum.", "Retire bateria removível quando possível.", "Encaminhe para coleta de eletroeletrônicos."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Decreto 10.240/2020", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "keyboard",
-      "display_label_pt_br": "teclado",
-      "hazard_level": "baixo",
-      "health_risks": "baixo risco direto quando intacto",
-      "environmental_risks": "gera resíduo plastico e eletrônico em descarte comum",
-      "typical_contents": ["placa eletronica", "membrana", "plastico", "cabo ou bateria"],
-      "disposal_instructions_br": ["Não descarte no lixo comum.", "Agrupe com perifericos para coleta conjunta.", "Leve a ponto de coleta de e-lixo."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "power_source_charger",
-      "display_label_pt_br": "fonte e carregador",
-      "hazard_level": "medio",
-      "health_risks": "componentes eletricos podem aquecer ou vazar quando danificados",
-      "environmental_risks": "resíduo eletrônico contaminante em descarte comum",
-      "typical_contents": ["transformador", "placa eletronica", "cabos", "plasticos"],
-      "disposal_instructions_br": ["Não descarte no lixo comum.", "Não desmonte carcaça para reaproveito caseiro.", "Entregue em coleta de pequenos eletroeletrônicos."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Decreto 10.240/2020", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "remote",
-      "display_label_pt_br": "controle remoto",
-      "hazard_level": "baixo",
-      "health_risks": "baixo risco direto, exceto pilhas internas",
-      "environmental_risks": "descartado no lixo comum soma plastico e componentes eletrônicos",
-      "typical_contents": ["placa eletronica", "plastico", "pilhas", "contatos metalicos"],
-      "disposal_instructions_br": ["Remova pilhas e descarte separadamente.", "Não descarte no lixo comum.", "Entregue controle e pilhas em pontos adequados."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Decreto 10.240/2020", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "power_tool",
-      "display_label_pt_br": "ferramenta eletrica",
-      "hazard_level": "medio",
-      "health_risks": "bateria e motor podem gerar risco se danificados",
-      "environmental_risks": "contaminação por metais, oleos e baterias",
-      "typical_contents": ["motor", "placa eletronica", "bateria", "carcaça plastica ou metalica"],
-      "disposal_instructions_br": ["Não descarte no lixo comum.", "Remova bateria quando for removível.", "Leve para ponto de coleta de eletroeletrônicos e baterias."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Decreto 10.240/2020"]
-    },
-    {
-      "class_name": "clock_radio",
-      "display_label_pt_br": "rádio relógio",
-      "hazard_level": "baixo",
-      "health_risks": "baixo risco direto quando intacto",
-      "environmental_risks": "resíduo eletrônico em descarte comum",
-      "typical_contents": ["placa eletronica", "alto-falante", "display", "plastico"],
-      "disposal_instructions_br": ["Não descarte no lixo comum.", "Agrupe com pequenos eletrônicos.", "Encaminhe para coleta de e-lixo."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Decreto 10.240/2020", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "home_theater",
-      "display_label_pt_br": "home theater",
-      "hazard_level": "medio",
-      "health_risks": "fontes e componentes internos podem conter materiais nocivos",
-      "environmental_risks": "equipamento volumoso com plastico e metais",
-      "typical_contents": ["placa eletronica", "alto-falantes", "cabos", "metais"],
-      "disposal_instructions_br": ["Não descarte em lixo comum.", "Separe cabos e acessórios quando possível.", "Leve a ponto de coleta para eletroeletrônicos."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Decreto 10.240/2020", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "headset",
-      "display_label_pt_br": "headset e fone",
-      "hazard_level": "baixo",
-      "health_risks": "baixo risco direto",
-      "environmental_risks": "resíduo plastico e eletrônico se descartado incorretamente",
-      "typical_contents": ["alto-falantes", "plastico", "cabos", "bateria em modelos sem fio"],
-      "disposal_instructions_br": ["Não descarte no lixo comum.", "Agrupe com perifericos pequenos.", "Descarte em ponto de coleta autorizado."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "microphone",
-      "display_label_pt_br": "microfone",
-      "hazard_level": "baixo",
-      "health_risks": "baixo risco direto quando intacto",
-      "environmental_risks": "resíduo eletrônico e plastico em descarte comum",
-      "typical_contents": ["capsula", "placa eletronica", "metal", "plastico"],
-      "disposal_instructions_br": ["Não descarte no lixo comum.", "Agrupe com acessórios de audio.", "Leve para coleta de eletroeletrônicos."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Diretrizes ABRELPE"]
-    },
-    {
-      "class_name": "smart_watch",
-      "display_label_pt_br": "relógio inteligente",
-      "hazard_level": "medio",
-      "health_risks": "bateria e tela podem liberar materiais nocivos se danificadas",
-      "environmental_risks": "bateria integrada não removível dificulta reciclagem e eleva risco de descarte inadequado",
-      "typical_contents": ["bateria", "placa eletronica", "display", "pulseira"],
-      "disposal_instructions_br": ["Não descarte no lixo comum.", "Não perfure a bateria interna.", "Entregue em ponto de coleta de pequenos eletrônicos."],
-      "legal_references": ["PNRS Lei 12.305/2010", "Decreto 10.240/2020", "Diretrizes ABRELPE"]
-    }
-  ]
+    "content_version":  "2026.05.13-v2-sourced",
+    "classes":  [
+                    {
+                        "class_name":  "battery",
+                        "display_label_pt_br":  "bateria",
+                        "hazard_level":  "alto",
+                        "health_risks":  "pode liberar metais e compostos tóxicos quando perfurada ou superaquecida",
+                        "environmental_risks":  "alto risco de contaminação de solo e agua",
+                        "typical_contents":  [
+                                                 "lítio",
+                                                 "níquel",
+                                                 "cobalto",
+                                                 "invólucro metalico"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não descarte no lixo comum.",
+                                                         "Isole os terminais se a bateria estiver danificada e mantenha longe de calor.",
+                                                         "Entregue em ponto de logística reversa de pilhas e baterias."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "Resolução CONAMA 401/2008 e atualizações - https://www.gov.br/ibama/pt-br/assuntos/emissoes-e-residuos/residuos/pilhas-e-baterias",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "cable",
+                        "display_label_pt_br":  "cabo",
+                        "hazard_level":  "baixo",
+                        "health_risks":  "baixo risco direto quando intacto",
+                        "environmental_risks":  "queima do isolamento pode liberar gases tóxicos",
+                        "typical_contents":  [
+                                                 "cobre",
+                                                 "plastico",
+                                                 "conectores metalicos"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não queime cabos para retirar cobre.",
+                                                         "Agrupe com outros eletrônicos pequenos.",
+                                                         "Encaminhe para coleta autorizada de e-lixo."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "Decreto 10.240/2020 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10240.htm",
+                                                 "Decreto 10.936/2022 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2022/decreto/d10936.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "capacitor",
+                        "display_label_pt_br":  "capacitor",
+                        "hazard_level":  "medio",
+                        "health_risks":  "pode vazar resíduos químicos quando rompido",
+                        "environmental_risks":  "contaminação local se descartado incorretamente",
+                        "typical_contents":  [
+                                                 "eletrolito",
+                                                 "aluminio",
+                                                 "revestimento plastico"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não perfure ou esmague.",
+                                                         "Armazene em recipiente fechado ate descarte.",
+                                                         "Leve para ponto de coleta de resíduos eletroeletrônicos."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "Decreto 10.240/2020 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10240.htm",
+                                                 "Decreto 10.936/2022 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2022/decreto/d10936.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "mobile_phone_tablet",
+                        "display_label_pt_br":  "celular e tablet",
+                        "hazard_level":  "alto",
+                        "health_risks":  "bateria e placa interna podem conter substâncias toxicas",
+                        "environmental_risks":  "contaminação por metais e compostos eletrônicos",
+                        "typical_contents":  [
+                                                 "bateria de lítio",
+                                                 "placa eletronica",
+                                                 "vidro",
+                                                 "plasticos"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não descarte no lixo comum.",
+                                                         "Se possível, remova dados pessoais antes do descarte.",
+                                                         "Entregue em ponto de logística reversa de eletrônicos."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "Decreto 10.240/2020 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10240.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "printer_multifunction",
+                        "display_label_pt_br":  "impressora e multifuncional",
+                        "hazard_level":  "medio",
+                        "health_risks":  "cartuchos e componentes internos podem conter resíduos químicos",
+                        "environmental_risks":  "descarte incorreto gera contaminação por plastico e metais",
+                        "typical_contents":  [
+                                                 "placa eletronica",
+                                                 "plasticos",
+                                                 "metais",
+                                                 "cartucho ou tinta"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não descarte no lixo comum.",
+                                                         "Retire cartuchos quando possível para descarte correto.",
+                                                         "Leve a ecoponto ou programa de logística reversa."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "Decreto 10.240/2020 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10240.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "flat_monitor",
+                        "display_label_pt_br":  "monitor plano",
+                        "hazard_level":  "medio",
+                        "health_risks":  "tela e componentes eletricos podem liberar resíduos quando quebrados",
+                        "environmental_risks":  "volume de plastico e metais com risco de contaminação",
+                        "typical_contents":  [
+                                                 "painel LCD ou LED",
+                                                 "placa eletronica",
+                                                 "plasticos",
+                                                 "metais"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não quebre a tela.",
+                                                         "Armazene em local seco ate descarte.",
+                                                         "Encaminhe para ponto de coleta de eletrônicos."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "Decreto 10.240/2020 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10240.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "mouse",
+                        "display_label_pt_br":  "mouse",
+                        "hazard_level":  "baixo",
+                        "health_risks":  "baixo risco quando intacto",
+                        "environmental_risks":  "resíduo plastico e eletrônico se descartado no lixo comum",
+                        "typical_contents":  [
+                                                 "placa eletronica",
+                                                 "plastico",
+                                                 "sensor",
+                                                 "cabo ou bateria"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não descarte no lixo comum.",
+                                                         "Agrupe com perifericos pequenos.",
+                                                         "Entregue em ponto de coleta de eletroeletrônicos."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "laptop",
+                        "display_label_pt_br":  "notebook",
+                        "hazard_level":  "alto",
+                        "health_risks":  "bateria e placa podem conter compostos perigosos",
+                        "environmental_risks":  "alto potencial de contaminação ambiental",
+                        "typical_contents":  [
+                                                 "bateria",
+                                                 "placa eletronica",
+                                                 "aluminio",
+                                                 "plasticos"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não desmonte para descarte domestico.",
+                                                         "Armazene em local seco ate envio.",
+                                                         "Leve para coleta autorizada de e-lixo."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "Decreto 10.240/2020 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10240.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "computer_part",
+                        "display_label_pt_br":  "componente de computador",
+                        "hazard_level":  "alto",
+                        "health_risks":  "placas e componentes podem conter metais e resíduos tóxicos",
+                        "environmental_risks":  "contaminacao persistente se descartado incorretamente; componentes avulsos devem seguir logistica reversa após a revogação da exclusão específica pelo Decreto 10.936/2022",
+                        "typical_contents":  [
+                                                 "placa eletronica",
+                                                 "solda metalica",
+                                                 "cobre",
+                                                 "plasticos"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não queime nem descarte no lixo comum.",
+                                                         "Mantenha separado de resíduos orgânicos.",
+                                                         "Entregue em coleta especializada de e-lixo."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "Decreto 10.240/2020 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10240.htm",
+                                                 "Decreto 10.936/2022 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2022/decreto/d10936.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "portable_music_player",
+                        "display_label_pt_br":  "caixa de som e player portatil",
+                        "hazard_level":  "medio",
+                        "health_risks":  "bateria interna e eletricos podem gerar risco quando danificados",
+                        "environmental_risks":  "descarte inadequado contamina solo por plastico e metais",
+                        "typical_contents":  [
+                                                 "alto-falante",
+                                                 "placa eletronica",
+                                                 "bateria",
+                                                 "plasticos"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não descarte no lixo comum.",
+                                                         "Evite perfurar baterias internas.",
+                                                         "Leve para ponto de coleta de eletrônicos pequenos."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "Decreto 10.240/2020 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10240.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "network_device",
+                        "display_label_pt_br":  "dispositivo de rede",
+                        "hazard_level":  "medio",
+                        "health_risks":  "componentes eletricos e fonte interna podem conter materiais nocivos",
+                        "environmental_risks":  "resíduo eletrônico contaminante em descarte comum",
+                        "typical_contents":  [
+                                                 "placa eletronica",
+                                                 "antenas",
+                                                 "plasticos",
+                                                 "metais"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não descarte no lixo comum.",
+                                                         "Remova cabos e fontes destacaveis quando possível.",
+                                                         "Encaminhe para logística reversa de eletrônicos."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "Decreto 10.240/2020 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10240.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "landline_telephone",
+                        "display_label_pt_br":  "telefone fixo e sem fio",
+                        "hazard_level":  "medio",
+                        "health_risks":  "baixo risco direto quando intacto; modelos sem fio podem conter bateria recarregavel",
+                        "environmental_risks":  "gera resíduo plastico e eletrônico se descartado incorretamente; baterias removiveis exigem descarte separado",
+                        "typical_contents":  [
+                                                 "placa eletronica",
+                                                 "plastico",
+                                                 "cabo",
+                                                 "teclado",
+                                                 "bateria em modelos sem fio"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não descarte no lixo comum.",
+                                                         "Remova bateria ou pilhas recarregaveis quando forem destacaveis e descarte separadamente.",
+                                                         "Agrupe base, monofone, cabos e fonte para levar a ponto de coleta autorizado."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "Decreto 10.240/2020 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10240.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "crt_monitor",
+                        "display_label_pt_br":  "monitor CRT e televisao de tubo",
+                        "hazard_level":  "alto",
+                        "health_risks":  "tubo CRT pode conter chumbo no vidro e componentes internos perigosos; nao deve ser quebrado ou desmontado",
+                        "environmental_risks":  "alto impacto por volume e composição do equipamento",
+                        "typical_contents":  [
+                                                 "tubo de vidro",
+                                                 "placa eletronica",
+                                                 "metais",
+                                                 "cabos"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não quebre o equipamento.",
+                                                         "Não descarte em lixo comum.",
+                                                         "Procure coleta municipal especializada para eletrônicos grandes."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "Decreto 10.240/2020 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10240.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "usb_stick",
+                        "display_label_pt_br":  "pendrive",
+                        "hazard_level":  "baixo",
+                        "health_risks":  "baixo risco direto para usuário",
+                        "environmental_risks":  "resíduo eletrônico pequeno mas persistente",
+                        "typical_contents":  [
+                                                 "memoria flash",
+                                                 "placa eletronica",
+                                                 "plastico",
+                                                 "conector metalico"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não descarte no lixo comum.",
+                                                         "Agrupe com perifericos pequenos.",
+                                                         "Descarte em ponto de coleta de e-lixo."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "Decreto 10.240/2020 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10240.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "home_appliance",
+                        "display_label_pt_br":  "eletrodomestico",
+                        "hazard_level":  "medio",
+                        "health_risks":  "componentes eletricos e motores podem conter materiais nocivos",
+                        "environmental_risks":  "equipamentos volumosos aumentam risco de descarte irregular",
+                        "typical_contents":  [
+                                                 "motor",
+                                                 "cabos",
+                                                 "placas eletronicas",
+                                                 "metais"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não descarte em lixo comum ou entulho.",
+                                                         "Solicite coleta específica quando o item for grande.",
+                                                         "Entregue em ecoponto com recebimento de eletrodomesticos."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "Decreto 10.240/2020 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10240.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "ink_toner_cartridge",
+                        "display_label_pt_br":  "cartucho de tinta e toner",
+                        "hazard_level":  "medio",
+                        "health_risks":  "po de toner e tinta podem irritar pele e vias respiratorias",
+                        "environmental_risks":  "contaminação por resíduos químicos e plastico",
+                        "typical_contents":  [
+                                                 "po de toner ou tinta",
+                                                 "plastico",
+                                                 "chips",
+                                                 "partes metalicas"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não descarte no lixo comum.",
+                                                         "Acondicione em saco fechado para evitar vazamento.",
+                                                         "Priorize programas de retorno de fabricantes e revendas."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "Decreto 10.240/2020 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10240.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "camera",
+                        "display_label_pt_br":  "camera",
+                        "hazard_level":  "medio",
+                        "health_risks":  "bateria e eletrônicos internos podem causar risco quando danificados",
+                        "environmental_risks":  "resíduo eletrônico com metais e plasticos",
+                        "typical_contents":  [
+                                                 "sensor",
+                                                 "placa eletronica",
+                                                 "lente",
+                                                 "bateria"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não descarte no lixo comum.",
+                                                         "Retire bateria removível quando possível.",
+                                                         "Encaminhe para coleta de eletroeletrônicos."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "Decreto 10.240/2020 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10240.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "keyboard",
+                        "display_label_pt_br":  "teclado",
+                        "hazard_level":  "baixo",
+                        "health_risks":  "baixo risco direto quando intacto",
+                        "environmental_risks":  "gera resíduo plastico e eletrônico em descarte comum",
+                        "typical_contents":  [
+                                                 "placa eletronica",
+                                                 "membrana",
+                                                 "plastico",
+                                                 "cabo ou bateria"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não descarte no lixo comum.",
+                                                         "Agrupe com perifericos para coleta conjunta.",
+                                                         "Leve a ponto de coleta de e-lixo."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "power_source_charger",
+                        "display_label_pt_br":  "fonte e carregador",
+                        "hazard_level":  "medio",
+                        "health_risks":  "componentes eletricos podem aquecer ou vazar quando danificados",
+                        "environmental_risks":  "resíduo eletrônico contaminante em descarte comum",
+                        "typical_contents":  [
+                                                 "transformador",
+                                                 "placa eletronica",
+                                                 "cabos",
+                                                 "plasticos"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não descarte no lixo comum.",
+                                                         "Não desmonte carcaça para reaproveito caseiro.",
+                                                         "Entregue em coleta de pequenos eletroeletrônicos."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "Decreto 10.240/2020 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10240.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "remote",
+                        "display_label_pt_br":  "controle remoto",
+                        "hazard_level":  "baixo",
+                        "health_risks":  "baixo risco direto, exceto pilhas internas",
+                        "environmental_risks":  "descartado no lixo comum soma plastico e componentes eletrônicos",
+                        "typical_contents":  [
+                                                 "placa eletronica",
+                                                 "plastico",
+                                                 "pilhas",
+                                                 "contatos metalicos"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Remova pilhas e descarte separadamente.",
+                                                         "Não descarte no lixo comum.",
+                                                         "Entregue controle e pilhas em pontos adequados."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "Decreto 10.240/2020 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10240.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "power_tool",
+                        "display_label_pt_br":  "ferramenta eletrica",
+                        "hazard_level":  "medio",
+                        "health_risks":  "bateria e motor podem gerar risco se danificados",
+                        "environmental_risks":  "contaminação por metais, oleos e baterias",
+                        "typical_contents":  [
+                                                 "motor",
+                                                 "placa eletronica",
+                                                 "bateria",
+                                                 "carcaça plastica ou metalica"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não descarte no lixo comum.",
+                                                         "Remova bateria quando for removível.",
+                                                         "Leve para ponto de coleta de eletroeletrônicos e baterias."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "Decreto 10.240/2020 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10240.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "clock_radio",
+                        "display_label_pt_br":  "rádio relógio",
+                        "hazard_level":  "baixo",
+                        "health_risks":  "baixo risco direto quando intacto",
+                        "environmental_risks":  "resíduo eletrônico em descarte comum",
+                        "typical_contents":  [
+                                                 "placa eletronica",
+                                                 "alto-falante",
+                                                 "display",
+                                                 "plastico"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não descarte no lixo comum.",
+                                                         "Agrupe com pequenos eletrônicos.",
+                                                         "Encaminhe para coleta de e-lixo."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "Decreto 10.240/2020 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10240.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "home_theater",
+                        "display_label_pt_br":  "home theater",
+                        "hazard_level":  "medio",
+                        "health_risks":  "fontes e componentes internos podem conter materiais nocivos",
+                        "environmental_risks":  "equipamento volumoso com plastico e metais",
+                        "typical_contents":  [
+                                                 "placa eletronica",
+                                                 "alto-falantes",
+                                                 "cabos",
+                                                 "metais"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não descarte em lixo comum.",
+                                                         "Separe cabos e acessórios quando possível.",
+                                                         "Leve a ponto de coleta para eletroeletrônicos."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "Decreto 10.240/2020 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10240.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "headset",
+                        "display_label_pt_br":  "headset e fone",
+                        "hazard_level":  "baixo",
+                        "health_risks":  "baixo risco direto",
+                        "environmental_risks":  "resíduo plastico e eletrônico se descartado incorretamente",
+                        "typical_contents":  [
+                                                 "alto-falantes",
+                                                 "plastico",
+                                                 "cabos",
+                                                 "bateria em modelos sem fio"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não descarte no lixo comum.",
+                                                         "Agrupe com perifericos pequenos.",
+                                                         "Descarte em ponto de coleta autorizado."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "microphone",
+                        "display_label_pt_br":  "microfone",
+                        "hazard_level":  "baixo",
+                        "health_risks":  "baixo risco direto quando intacto",
+                        "environmental_risks":  "resíduo eletrônico e plastico em descarte comum",
+                        "typical_contents":  [
+                                                 "capsula",
+                                                 "placa eletronica",
+                                                 "metal",
+                                                 "plastico"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não descarte no lixo comum.",
+                                                         "Agrupe com acessórios de audio.",
+                                                         "Leve para coleta de eletroeletrônicos."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    },
+                    {
+                        "class_name":  "smart_watch",
+                        "display_label_pt_br":  "relógio inteligente",
+                        "hazard_level":  "medio",
+                        "health_risks":  "bateria e tela podem liberar materiais nocivos se danificadas",
+                        "environmental_risks":  "bateria integrada não removível dificulta reciclagem e eleva risco de descarte inadequado",
+                        "typical_contents":  [
+                                                 "bateria",
+                                                 "placa eletronica",
+                                                 "display",
+                                                 "pulseira"
+                                             ],
+                        "disposal_instructions_br":  [
+                                                         "Não descarte no lixo comum.",
+                                                         "Não perfure a bateria interna.",
+                                                         "Entregue em ponto de coleta de pequenos eletrônicos."
+                                                     ],
+                        "legal_references":  [
+                                                 "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
+                                                 "Decreto 10.240/2020 - https://www.planalto.gov.br/ccivil_03/_ato2019-2022/2020/decreto/d10240.htm",
+                                                 "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
+                                             ]
+                    }
+                ]
 }

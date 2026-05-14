@@ -41,6 +41,7 @@ O backend recebe imagens enviadas pelo frontend, executa inferência com modelo 
 - `INPUT_SIZE`: tamanho de entrada do modelo. Padrão: `640`.
 - `MAX_UPLOAD_MB`: tamanho máximo de upload. Padrão: `10`.
 - `CORS_ALLOW_ORIGINS`: origens permitidas, separadas por vírgula.
+- `RATE_LIMIT_ANALYZE_PER_MINUTE`: limite por IP para `POST /v1/analyze-image`. Padrão local: `0` (desligado); deploy Compose: `30`.
 
 ## Contrato principal da API
 

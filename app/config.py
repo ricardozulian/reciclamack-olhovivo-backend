@@ -6,7 +6,7 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 DEFAULT_MODEL_PATH = BASE_DIR / "app" / "model" / "yolo11n_ewaste.onnx"
-DEFAULT_MODEL_CLASSES_PATH = BASE_DIR / "app" / "model" / "yolo11n_ewaste.classes.txt"
+DEFAULT_MODEL_CLASSES_PATH = BASE_DIR / "app" / "model" / "yolo11n_ewaste_v1.classes.txt"
 DEFAULT_HAZARDS_PATH = BASE_DIR / "app" / "data" / "hazards_rules.json"
 DEFAULT_COLLECTION_PATH = BASE_DIR / "app" / "data" / "collection_points_sp.json"
 DEFAULT_UPLOADS_DIR = BASE_DIR / "app" / "uploads"
@@ -29,6 +29,8 @@ class Settings:
     input_size: int = 640
     max_upload_mb: int = 10
     cors_allow_origins: tuple[str, ...] = ()
+    rate_limit_analyze_per_minute: int = 0
+    max_response_classes: int = 1
 
 
 def get_settings() -> Settings:
@@ -52,4 +54,6 @@ def get_settings() -> Settings:
         input_size=int(os.getenv("INPUT_SIZE", "640")),
         max_upload_mb=int(os.getenv("MAX_UPLOAD_MB", "10")),
         cors_allow_origins=cors_origins,
+        rate_limit_analyze_per_minute=int(os.getenv("RATE_LIMIT_ANALYZE_PER_MINUTE", "0")),
+        max_response_classes=int(os.getenv("MAX_RESPONSE_CLASSES", "1")),
     )

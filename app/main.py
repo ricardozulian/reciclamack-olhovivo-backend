@@ -4,13 +4,16 @@ import asyncio
 import logging
 import time
 import uuid
+from collections import defaultdict, deque
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Awaitable, Callable
 
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.routing import APIRoute
 from starlette.requests import Request
-from starlette.responses import Response
+from starlette.responses import JSONResponse, Response
 
 from .cleanup import cleanup_loop
 from .config import Settings, get_settings
@@ -22,6 +25,27 @@ from .storage import UploadStorage
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("reciclamack.api")
+
+MODEL_CLASS_ALIASES = {
+    "bateria": "battery",
+    "cabo": "cable",
+    "celular": "mobile_phone_tablet",
+    "impressora": "printer_multifunction",
+    "monitor": "flat_monitor",
+    "notebook": "laptop",
+    "placa_eletronica": "computer_part",
+    "player": "portable_music_player",
+    "router": "network_device",
+    "telephone": "landline_telephone",
+    "televisao": "crt_monitor",
+}
+
+
+def _client_ip(request: Request) -> str:
+    forwarded = request.headers.get("x-forwarded-for", "")
+    if forwarded:
+        return forwarded.split(",", 1)[0].strip()
+    return request.client.host if request.client else "unknown"
 
 
 def _confidence_hint(confidence: float) -> str:
@@ -40,7 +64,7 @@ def _load_model_class_names(path: Path) -> list[str]:
         name = raw.strip()
         if not name or name.startswith("#"):
             continue
-        names.append(name)
+        names.append(MODEL_CLASS_ALIASES.get(name.lower(), name))
     return names
 
 
@@ -57,6 +81,55 @@ def _validate_class_parity(model_class_names: list[str], content_store: ContentS
             missing_in_content,
             missing_in_model,
         )
+
+
+def _bbox_iou(a: dict[str, object], b: dict[str, object]) -> float:
+    a_box = a["bbox"]
+    b_box = b["bbox"]
+    if not isinstance(a_box, dict) or not isinstance(b_box, dict):
+        return 0.0
+    ax1, ay1, ax2, ay2 = float(a_box["x1"]), float(a_box["y1"]), float(a_box["x2"]), float(a_box["y2"])
+    bx1, by1, bx2, by2 = float(b_box["x1"]), float(b_box["y1"]), float(b_box["x2"]), float(b_box["y2"])
+    ix1, iy1 = max(ax1, bx1), max(ay1, by1)
+    ix2, iy2 = min(ax2, bx2), min(ay2, by2)
+    iw, ih = max(0.0, ix2 - ix1), max(0.0, iy2 - iy1)
+    intersection = iw * ih
+    if intersection <= 0:
+        return 0.0
+    area_a = max(0.0, ax2 - ax1) * max(0.0, ay2 - ay1)
+    area_b = max(0.0, bx2 - bx1) * max(0.0, by2 - by1)
+    union = area_a + area_b - intersection
+    return intersection / union if union > 0 else 0.0
+
+
+def _filter_v1_detections(
+    detections: list[dict[str, object]],
+    supported_classes: set[str],
+    min_confidence: float,
+    iou_threshold: float,
+    max_response_classes: int,
+) -> list[dict[str, object]]:
+    eligible = [
+        detection
+        for detection in detections
+        if float(detection.get("confidence", 0.0)) >= min_confidence
+        and str(detection.get("class_name", "")).lower() in supported_classes
+    ]
+    eligible.sort(key=lambda item: float(item.get("confidence", 0.0)), reverse=True)
+
+    kept: list[dict[str, object]] = []
+    seen_classes: set[str] = set()
+    for detection in eligible:
+        class_name = str(detection["class_name"]).lower()
+        if class_name in seen_classes:
+            continue
+        if any(_bbox_iou(detection, other) > iou_threshold for other in kept):
+            continue
+        kept.append(detection)
+        seen_classes.add(class_name)
+        if max_response_classes > 0 and len(seen_classes) >= max_response_classes:
+            break
+    return kept
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -91,11 +164,74 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         )
     )
     detector.load()
+    app.state.detector = detector
+    app.state.content_store = content_store
 
     repository = RequestRepository(app_settings.sqlite_path)
     repository.init()
     storage = UploadStorage(app_settings.uploads_dir, app_settings.image_retention_hours)
     cleanup_task: asyncio.Task | None = None
+    analyze_hits: dict[str, deque[float]] = defaultdict(deque)
+
+    class LoggedRoute(APIRoute):
+        def get_route_handler(self) -> Callable[[Request], Awaitable[Response]]:
+            original_route_handler = super().get_route_handler()
+
+            async def custom_route_handler(request: Request) -> Response:
+                started = time.perf_counter()
+                req_id = request.headers.get("x-request-id") or str(uuid.uuid4())
+                limit = app_settings.rate_limit_analyze_per_minute
+                if limit > 0 and request.method == "POST" and request.url.path == "/v1/analyze-image":
+                    now = time.monotonic()
+                    window_start = now - 60
+                    key = _client_ip(request)
+                    hits = analyze_hits[key]
+                    while hits and hits[0] < window_start:
+                        hits.popleft()
+                    if len(hits) >= limit:
+                        elapsed_ms = int((time.perf_counter() - started) * 1000)
+                        logger.warning(
+                            "rate_limited request_id=%s client_ip=%s path=%s limit=%s latency_ms=%s",
+                            req_id,
+                            key,
+                            request.url.path,
+                            limit,
+                            elapsed_ms,
+                        )
+                        response = JSONResponse(
+                            {"detail": "Muitas requisicoes. Tente novamente em instantes."},
+                            status_code=429,
+                        )
+                        response.headers["X-Request-Id"] = req_id
+                        return response
+                    hits.append(now)
+                try:
+                    response = await original_route_handler(request)
+                except Exception:
+                    elapsed_ms = int((time.perf_counter() - started) * 1000)
+                    logger.exception(
+                        "request_failed request_id=%s method=%s path=%s latency_ms=%s",
+                        req_id,
+                        request.method,
+                        request.url.path,
+                        elapsed_ms,
+                    )
+                    raise
+                elapsed_ms = int((time.perf_counter() - started) * 1000)
+                response.headers["X-Request-Id"] = req_id
+                logger.info(
+                    "request_done request_id=%s method=%s path=%s status=%s latency_ms=%s",
+                    req_id,
+                    request.method,
+                    request.url.path,
+                    response.status_code,
+                    elapsed_ms,
+                )
+                return response
+
+            return custom_route_handler
+
+    app.router.route_class = LoggedRoute
 
     @app.on_event("startup")
     async def on_startup() -> None:
@@ -104,34 +240,6 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             cleanup_loop(repository, app_settings.cleanup_interval_seconds)
         )
         logger.info("Cleanup loop started")
-
-    @app.middleware("http")
-    async def log_requests(request: Request, call_next) -> Response:
-        started = time.perf_counter()
-        req_id = request.headers.get("x-request-id") or str(uuid.uuid4())
-        try:
-            response = await call_next(request)
-        except Exception:
-            elapsed_ms = int((time.perf_counter() - started) * 1000)
-            logger.exception(
-                "request_failed request_id=%s method=%s path=%s latency_ms=%s",
-                req_id,
-                request.method,
-                request.url.path,
-                elapsed_ms,
-            )
-            raise
-        elapsed_ms = int((time.perf_counter() - started) * 1000)
-        response.headers["X-Request-Id"] = req_id
-        logger.info(
-            "request_done request_id=%s method=%s path=%s status=%s latency_ms=%s",
-            req_id,
-            request.method,
-            request.url.path,
-            response.status_code,
-            elapsed_ms,
-        )
-        return response
 
     @app.on_event("shutdown")
     async def on_shutdown() -> None:
@@ -189,7 +297,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             detections = []
         inference_ms = int((time.perf_counter() - started) * 1000)
 
-        filtered = [d for d in detections if d["confidence"] >= app_settings.min_confidence]
+        filtered = _filter_v1_detections(
+            detections=detections,
+            supported_classes=set(content_store.supported_classes()),
+            min_confidence=app_settings.min_confidence,
+            iou_threshold=app_settings.nms_iou,
+            max_response_classes=app_settings.max_response_classes,
+        )
         uncertainty_flag = len(filtered) == 0
         next_best_action = (
             "Nao foi possivel identificar com boa confianca. Tente outra foto com melhor iluminacao."
