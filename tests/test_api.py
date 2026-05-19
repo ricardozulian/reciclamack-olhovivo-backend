@@ -1,11 +1,40 @@
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 
 from fastapi.testclient import TestClient
 
 from app.config import Settings
 from app.main import _load_model_class_names, create_app
+
+V2_25CLASS_MODEL_CLASSES = [
+    "battery",
+    "cable",
+    "mobile_phone_tablet",
+    "printer_multifunction",
+    "flat_monitor",
+    "mouse",
+    "laptop",
+    "computer_part",
+    "portable_music_player",
+    "network_device",
+    "landline_telephone",
+    "crt_monitor",
+    "usb_stick",
+    "ink_toner_cartridge",
+    "camera",
+    "keyboard",
+    "power_source_charger",
+    "remote",
+    "power_tool",
+    "clock_radio",
+    "headset",
+    "microphone",
+    "smart_watch",
+    "home_appliance",
+    "home_theater",
+]
 
 
 def _settings(tmp_path: Path) -> Settings:
@@ -66,6 +95,26 @@ def test_classes_endpoint_uses_active_v1_model_classes(tmp_path: Path) -> None:
     ]
     assert "smart_watch" not in class_names
     assert "camera" not in class_names
+
+
+def test_classes_endpoint_uses_v2_25class_runtime_pairing(tmp_path: Path) -> None:
+    base = Path(__file__).resolve().parents[1] / "app"
+    settings = replace(
+        _settings(tmp_path),
+        model_classes_path=base / "model" / "ewaste_v2_25class.classes.txt",
+        hazards_path=base / "data" / "hazards_rules_v2_25class.json",
+        input_size=512,
+    )
+    app = create_app(settings)
+    client = TestClient(app)
+
+    resp = client.get("/v1/classes")
+
+    assert resp.status_code == 200
+    class_names = [item["class_name"] for item in resp.json()["classes"]]
+    assert class_names == V2_25CLASS_MODEL_CLASSES
+    assert "capacitor" not in class_names
+    assert app.state.detector.config.input_size == 512
 
 
 def test_v1_model_class_file_maps_to_content_class_names(tmp_path: Path) -> None:

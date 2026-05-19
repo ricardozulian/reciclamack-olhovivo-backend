@@ -33,6 +33,34 @@ V2_CANONICAL_CLASSES = [
     "smart_watch",
 ]
 
+V2_25CLASS_MODEL_CLASSES = [
+    "battery",
+    "cable",
+    "mobile_phone_tablet",
+    "printer_multifunction",
+    "flat_monitor",
+    "mouse",
+    "laptop",
+    "computer_part",
+    "portable_music_player",
+    "network_device",
+    "landline_telephone",
+    "crt_monitor",
+    "usb_stick",
+    "ink_toner_cartridge",
+    "camera",
+    "keyboard",
+    "power_source_charger",
+    "remote",
+    "power_tool",
+    "clock_radio",
+    "headset",
+    "microphone",
+    "smart_watch",
+    "home_appliance",
+    "home_theater",
+]
+
 
 def test_hazards_entries_have_legal_references() -> None:
     base = Path(__file__).resolve().parents[1] / "app"
@@ -78,3 +106,43 @@ def test_every_v2_class_has_complete_return_card_content() -> None:
         assert card["environmental_risks"]
         assert len(card["disposal_instructions_br"]) >= 3
         assert len(card["legal_references"]) >= 2
+
+
+def test_v2_25class_runtime_content_matches_model_order() -> None:
+    base = Path(__file__).resolve().parents[1] / "app"
+    hazards_path = base / "data" / "hazards_rules_v2_25class.json"
+    classes_path = base / "model" / "ewaste_v2_25class.classes.txt"
+
+    payload = json.loads(hazards_path.read_text(encoding="utf-8"))
+    content_classes = [item["class_name"] for item in payload["classes"]]
+    model_classes = [
+        line.strip()
+        for line in classes_path.read_text(encoding="utf-8").splitlines()
+        if line.strip() and not line.strip().startswith("#")
+    ]
+
+    assert model_classes == V2_25CLASS_MODEL_CLASSES
+    assert content_classes == V2_25CLASS_MODEL_CLASSES
+    assert "capacitor" not in model_classes
+    assert "capacitor" not in content_classes
+
+
+def test_runtime_hazard_content_has_valid_portuguese_encoding() -> None:
+    base = Path(__file__).resolve().parents[1] / "app" / "data"
+    hazard_paths = [
+        base / "hazards_rules.json",
+        base / "hazards_rules_v2.json",
+        base / "hazards_rules_v2_25class.json",
+    ]
+
+    for path in hazard_paths:
+        text = path.read_text(encoding="utf-8")
+        assert "Ã" not in text
+        assert "Â" not in text
+        payload = json.loads(text)
+        labels = {
+            item["class_name"]: item["display_label_pt_br"]
+            for item in payload["classes"]
+        }
+        if "smart_watch" in labels:
+            assert labels["smart_watch"] == "relógio inteligente"
