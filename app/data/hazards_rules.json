@@ -334,11 +334,13 @@
                                                  "motor",
                                                  "cabos",
                                                  "placas eletronicas",
-                                                 "metais"
+                                                 "metais",
+                                                 "magnetron e capacitor de alta tensão em micro-ondas"
                                              ],
                         "disposal_instructions_br":  [
                                                          "Não descarte em lixo comum ou entulho.",
                                                          "Solicite coleta específica quando o item for grande.",
+                                                         "Para micro-ondas, não abra a carcaça nem tente remover o magnetron ou o capacitor interno.",
                                                          "Entregue em ecoponto com recebimento de eletrodomesticos."
                                                      ],
                         "legal_references":  [

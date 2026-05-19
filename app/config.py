@@ -22,6 +22,7 @@ class Settings:
     collection_points_path: Path = DEFAULT_COLLECTION_PATH
     uploads_dir: Path = DEFAULT_UPLOADS_DIR
     sqlite_path: Path = DEFAULT_SQLITE_PATH
+    image_retention_mode: str = "ttl"
     image_retention_hours: int = 24
     cleanup_interval_seconds: int = 3600
     min_confidence: float = 0.40
@@ -40,6 +41,9 @@ def get_settings() -> Settings:
         for origin in cors_raw.split(",")
         if origin.strip()
     )
+    retention_mode = os.getenv("IMAGE_RETENTION_MODE", "ttl").strip().lower() or "ttl"
+    if retention_mode not in {"ttl", "keep"}:
+        retention_mode = "ttl"
     return Settings(
         model_path=Path(os.getenv("MODEL_PATH", str(DEFAULT_MODEL_PATH))),
         model_classes_path=Path(os.getenv("MODEL_CLASSES_PATH", str(DEFAULT_MODEL_CLASSES_PATH))),
@@ -47,6 +51,7 @@ def get_settings() -> Settings:
         collection_points_path=Path(os.getenv("COLLECTION_POINTS_PATH", str(DEFAULT_COLLECTION_PATH))),
         uploads_dir=Path(os.getenv("UPLOADS_DIR", str(DEFAULT_UPLOADS_DIR))),
         sqlite_path=Path(os.getenv("SQLITE_PATH", str(DEFAULT_SQLITE_PATH))),
+        image_retention_mode=retention_mode,
         image_retention_hours=int(os.getenv("IMAGE_RETENTION_HOURS", "24")),
         cleanup_interval_seconds=int(os.getenv("CLEANUP_INTERVAL_SECONDS", "3600")),
         min_confidence=float(os.getenv("MIN_CONFIDENCE", "0.40")),

@@ -17,6 +17,7 @@ def _settings(tmp_path: Path) -> Settings:
         collection_points_path=collection_path,
         uploads_dir=tmp_path / "uploads",
         sqlite_path=tmp_path / "requests.db",
+        image_retention_mode="ttl",
         cleanup_interval_seconds=9999,
     )
 
@@ -37,6 +38,34 @@ def test_health_and_classes(tmp_path: Path) -> None:
     assert payload["classes"]
     assert all("class_name" in item for item in payload["classes"])
     assert all("display_label_pt_br" in item for item in payload["classes"])
+
+
+def test_classes_endpoint_uses_active_v1_model_classes(tmp_path: Path) -> None:
+    app = create_app(_settings(tmp_path))
+    client = TestClient(app)
+
+    resp = client.get("/v1/classes")
+
+    assert resp.status_code == 200
+    class_names = [item["class_name"] for item in resp.json()["classes"]]
+    assert class_names == [
+        "battery",
+        "cable",
+        "capacitor",
+        "mobile_phone_tablet",
+        "printer_multifunction",
+        "flat_monitor",
+        "mouse",
+        "laptop",
+        "computer_part",
+        "portable_music_player",
+        "network_device",
+        "landline_telephone",
+        "crt_monitor",
+        "usb_stick",
+    ]
+    assert "smart_watch" not in class_names
+    assert "camera" not in class_names
 
 
 def test_v1_model_class_file_maps_to_content_class_names(tmp_path: Path) -> None:
@@ -83,6 +112,7 @@ def test_analyze_image_rate_limit_is_opt_in(tmp_path: Path) -> None:
         collection_points_path=settings.collection_points_path,
         uploads_dir=settings.uploads_dir,
         sqlite_path=settings.sqlite_path,
+        image_retention_mode=settings.image_retention_mode,
         image_retention_hours=settings.image_retention_hours,
         cleanup_interval_seconds=settings.cleanup_interval_seconds,
         min_confidence=settings.min_confidence,
@@ -132,6 +162,34 @@ def test_analyze_image_response_shape(tmp_path: Path) -> None:
         assert "display_label_pt_br" in item
     for item in body["guidance"]:
         assert "display_label_pt_br" in item
+
+
+def test_analyze_image_persists_keep_retention_mode(tmp_path: Path) -> None:
+    settings = Settings(
+        model_path=tmp_path / "missing.onnx",
+        model_classes_path=_settings(tmp_path).model_classes_path,
+        hazards_path=_settings(tmp_path).hazards_path,
+        collection_points_path=_settings(tmp_path).collection_points_path,
+        uploads_dir=tmp_path / "uploads",
+        sqlite_path=tmp_path / "requests.db",
+        image_retention_mode="keep",
+        cleanup_interval_seconds=9999,
+    )
+    app = create_app(settings)
+    client = TestClient(app)
+
+    image = (
+        b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01"
+        b"\x08\x02\x00\x00\x00\x90wS\xde\x00\x00\x00\nIDATx\x9cc`\x00\x00\x00"
+        b"\x02\x00\x01\xe2!\xbc3\x00\x00\x00\x00IEND\xaeB`\x82"
+    )
+    resp = client.post("/v1/analyze-image", files={"file": ("img.png", image, "image/png")})
+
+    assert resp.status_code == 200
+    row = app.state.repository.fetch_request(resp.json()["request_id"])
+    assert row is not None
+    assert row["retention_mode"] == "keep"
+    assert row["expires_at"] == "9999-12-31T23:59:59Z"
 
 
 def test_analyze_image_suppresses_overlapping_cross_class_detections(tmp_path: Path) -> None:

@@ -19,6 +19,7 @@ def test_cleanup_deletes_expired_files(tmp_path: Path) -> None:
         request_id="req-1",
         stored_path=sample.as_posix(),
         expires_at="2000-01-01T00:00:00Z",
+        retention_mode="ttl",
         model_version="test",
         inference_ms=1,
     )
@@ -27,3 +28,25 @@ def test_cleanup_deletes_expired_files(tmp_path: Path) -> None:
     assert deleted == 1
     assert not sample.exists()
 
+
+def test_cleanup_skips_keep_mode_files(tmp_path: Path) -> None:
+    db_path = tmp_path / "requests.db"
+    uploads = tmp_path / "uploads"
+    uploads.mkdir(parents=True, exist_ok=True)
+    sample = uploads / "sample.jpg"
+    sample.write_bytes(b"image")
+
+    repo = RequestRepository(db_path)
+    repo.init()
+    repo.insert_request(
+        request_id="req-keep",
+        stored_path=sample.as_posix(),
+        expires_at="9999-12-31T23:59:59Z",
+        retention_mode="keep",
+        model_version="test",
+        inference_ms=1,
+    )
+
+    deleted = run_cleanup_once(repo)
+    assert deleted == 0
+    assert sample.exists()

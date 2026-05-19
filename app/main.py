@@ -83,6 +83,18 @@ def _validate_class_parity(model_class_names: list[str], content_store: ContentS
         )
 
 
+def _active_content_classes(model_class_names: list[str], content_store: ContentStore) -> list[str]:
+    content_set = set(content_store.supported_classes())
+    active: list[str] = []
+    seen: set[str] = set()
+    for name in model_class_names:
+        class_name = name.lower()
+        if class_name in content_set and class_name not in seen:
+            active.append(class_name)
+            seen.add(class_name)
+    return active or content_store.supported_classes()
+
+
 def _bbox_iou(a: dict[str, object], b: dict[str, object]) -> float:
     a_box = a["bbox"]
     b_box = b["bbox"]
@@ -153,6 +165,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             app_settings.model_classes_path,
         )
     _validate_class_parity(model_class_names, content_store)
+    active_class_names = _active_content_classes(model_class_names, content_store)
 
     detector = OnnxDetector(
         DetectorConfig(
@@ -166,10 +179,17 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     detector.load()
     app.state.detector = detector
     app.state.content_store = content_store
+    app.state.active_class_names = active_class_names
 
     repository = RequestRepository(app_settings.sqlite_path)
     repository.init()
-    storage = UploadStorage(app_settings.uploads_dir, app_settings.image_retention_hours)
+    app.state.repository = repository
+    app.state.settings = app_settings
+    storage = UploadStorage(
+        app_settings.uploads_dir,
+        app_settings.image_retention_hours,
+        app_settings.image_retention_mode,
+    )
     cleanup_task: asyncio.Task | None = None
     analyze_hits: dict[str, deque[float]] = defaultdict(deque)
 
@@ -269,7 +289,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                     display_label_pt_br=content_store.get_display_label(name),
                     confidence_hint=_confidence_hint(app_settings.min_confidence),
                 )
-                for name in content_store.supported_classes()
+                for name in active_class_names
             ],
         )
 
@@ -299,7 +319,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
         filtered = _filter_v1_detections(
             detections=detections,
-            supported_classes=set(content_store.supported_classes()),
+            supported_classes=set(active_class_names),
             min_confidence=app_settings.min_confidence,
             iou_threshold=app_settings.nms_iou,
             max_response_classes=app_settings.max_response_classes,
@@ -344,6 +364,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 request_id=request_id,
                 stored_path=stored_path.as_posix(),
                 expires_at=expires_at,
+                retention_mode=app_settings.image_retention_mode,
                 model_version=detector.model_version,
                 inference_ms=inference_ms,
             )

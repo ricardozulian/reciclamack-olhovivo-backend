@@ -25,7 +25,7 @@ O backend recebe imagens enviadas pelo frontend, executa inferência com modelo 
 - Modelo runtime em `app/model/yolo11n_ewaste.onnx`.
 - Conteúdo ambiental em JSON.
 - Registro operacional leve em SQLite.
-- Limpeza automática de imagens enviadas após o período de retenção.
+- Retenção configurável de imagens enviadas para depuração e evolução do modelo.
 
 ## Variáveis de ambiente
 
@@ -34,7 +34,8 @@ O backend recebe imagens enviadas pelo frontend, executa inferência com modelo 
 - `COLLECTION_POINTS_PATH`: base de pontos de coleta.
 - `UPLOADS_DIR`: diretório temporário de uploads.
 - `SQLITE_PATH`: banco SQLite operacional.
-- `IMAGE_RETENTION_HOURS`: retenção de imagens. Padrão: `24`.
+- `IMAGE_RETENTION_MODE`: política de retenção. `ttl` apaga após o prazo; `keep` preserva as imagens para depuração e treinamento. Padrão: `ttl`.
+- `IMAGE_RETENTION_HOURS`: retenção de imagens quando `IMAGE_RETENTION_MODE=ttl`. Padrão: `24`.
 - `CLEANUP_INTERVAL_SECONDS`: intervalo da limpeza. Padrão: `3600`.
 - `MIN_CONFIDENCE`: confiança mínima. Padrão: `0.40`.
 - `NMS_IOU`: limiar de NMS. Padrão: `0.45`.

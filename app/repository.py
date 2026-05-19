@@ -33,21 +33,34 @@ class RequestRepository:
                   request_id TEXT PRIMARY KEY,
                   stored_path TEXT NOT NULL,
                   created_at TEXT NOT NULL,
-                  expires_at TEXT NOT NULL,
+                  expires_at TEXT,
                   deleted_at TEXT,
                   status TEXT NOT NULL,
+                  retention_mode TEXT NOT NULL DEFAULT 'ttl',
                   model_version TEXT NOT NULL,
                   inference_ms INTEGER NOT NULL
                 );
                 """
             )
+            columns = {
+                row["name"]
+                for row in conn.execute("PRAGMA table_info(request_logs)").fetchall()
+            }
+            if "retention_mode" not in columns:
+                conn.execute(
+                    """
+                    ALTER TABLE request_logs
+                    ADD COLUMN retention_mode TEXT NOT NULL DEFAULT 'ttl'
+                    """
+                )
             conn.commit()
 
     def insert_request(
         self,
         request_id: str,
         stored_path: str,
-        expires_at: str,
+        expires_at: str | None,
+        retention_mode: str,
         model_version: str,
         inference_ms: int,
     ) -> None:
@@ -55,8 +68,8 @@ class RequestRepository:
             conn.execute(
                 """
                 INSERT INTO request_logs (
-                  request_id, stored_path, created_at, expires_at, deleted_at, status, model_version, inference_ms
-                ) VALUES (?, ?, ?, ?, NULL, ?, ?, ?)
+                  request_id, stored_path, created_at, expires_at, deleted_at, status, retention_mode, model_version, inference_ms
+                ) VALUES (?, ?, ?, ?, NULL, ?, ?, ?, ?)
                 """,
                 (
                     request_id,
@@ -64,6 +77,7 @@ class RequestRepository:
                     utc_now_iso(),
                     expires_at,
                     "stored",
+                    retention_mode,
                     model_version,
                     inference_ms,
                 ),
@@ -89,9 +103,20 @@ class RequestRepository:
                 SELECT request_id, stored_path
                   FROM request_logs
                  WHERE status = 'stored'
+                   AND retention_mode = 'ttl'
                    AND expires_at <= ?
                 """,
                 (now_iso,),
             ).fetchall()
             return rows
 
+    def fetch_request(self, request_id: str) -> sqlite3.Row | None:
+        with self._conn() as conn:
+            return conn.execute(
+                """
+                SELECT request_id, stored_path, expires_at, retention_mode, status, model_version, inference_ms
+                  FROM request_logs
+                 WHERE request_id = ?
+                """,
+                (request_id,),
+            ).fetchone()
