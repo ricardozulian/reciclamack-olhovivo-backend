@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import io
 import logging
 import time
 import uuid
@@ -12,6 +13,7 @@ from typing import Awaitable, Callable
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.routing import APIRoute
+from PIL import Image, UnidentifiedImageError
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 
@@ -112,6 +114,57 @@ def _bbox_iou(a: dict[str, object], b: dict[str, object]) -> float:
     area_b = max(0.0, bx2 - bx1) * max(0.0, by2 - by1)
     union = area_a + area_b - intersection
     return intersection / union if union > 0 else 0.0
+
+
+def _clamp(value: float, lower: float = 0.0, upper: float = 1.0) -> float:
+    return max(lower, min(upper, value))
+
+
+def _image_size(payload: bytes) -> tuple[int, int] | None:
+    try:
+        with Image.open(io.BytesIO(payload)) as image:
+            return image.size
+    except (OSError, UnidentifiedImageError):
+        return None
+
+
+def _to_yolo_label_line(detection: dict[str, object], image_size: tuple[int, int]) -> str | None:
+    width, height = image_size
+    if width <= 0 or height <= 0:
+        return None
+    bbox = detection.get("bbox")
+    if not isinstance(bbox, dict):
+        return None
+
+    x1 = _clamp(float(bbox["x1"]) / width)
+    y1 = _clamp(float(bbox["y1"]) / height)
+    x2 = _clamp(float(bbox["x2"]) / width)
+    y2 = _clamp(float(bbox["y2"]) / height)
+    left, right = sorted((x1, x2))
+    top, bottom = sorted((y1, y2))
+    x_center = (left + right) / 2
+    y_center = (top + bottom) / 2
+    box_width = right - left
+    box_height = bottom - top
+    return (
+        f"{int(detection['class_id'])} "
+        f"{x_center:.6f} {y_center:.6f} {box_width:.6f} {box_height:.6f}"
+    )
+
+
+def _dataset_label_content(
+    detections: list[dict[str, object]],
+    image_size: tuple[int, int] | None,
+    inference_failed: bool,
+) -> str:
+    if inference_failed or not detections or image_size is None:
+        return "null"
+    lines = [
+        line
+        for line in (_to_yolo_label_line(detection, image_size) for detection in detections)
+        if line is not None
+    ]
+    return "\n".join(lines) if lines else "null"
 
 
 def _filter_v1_detections(
@@ -310,11 +363,13 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         stored_path, expires_at = storage.save(request_id, payload, ext)
 
         started = time.perf_counter()
+        inference_failed = False
         try:
             detections = detector.predict(payload)
         except Exception:
             logger.exception("Inference failed for request_id=%s", request_id)
             detections = []
+            inference_failed = True
         inference_ms = int((time.perf_counter() - started) * 1000)
 
         filtered = _filter_v1_detections(
@@ -358,6 +413,16 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                     legal_basis=info["legal_references"],
                 )
             )
+
+        label_content = _dataset_label_content(
+            response_detections,
+            _image_size(payload),
+            inference_failed,
+        )
+        try:
+            storage.save_label(stored_path, label_content)
+        except Exception:
+            logger.exception("Failed to persist dataset label for request_id=%s", request_id)
 
         try:
             repository.insert_request(

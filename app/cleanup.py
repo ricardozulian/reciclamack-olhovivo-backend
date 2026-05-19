@@ -16,8 +16,11 @@ def run_cleanup_once(repository: RequestRepository) -> int:
     deleted = 0
     for row in expired:
         path = Path(row["stored_path"])
+        label_path = path.with_suffix(".txt")
         if path.exists():
             path.unlink(missing_ok=True)
+        if label_path.exists():
+            label_path.unlink(missing_ok=True)
         repository.mark_deleted(row["request_id"])
         deleted += 1
     return deleted
@@ -27,4 +30,3 @@ async def cleanup_loop(repository: RequestRepository, interval_seconds: int) -> 
     while True:
         run_cleanup_once(repository)
         await asyncio.sleep(interval_seconds)
-

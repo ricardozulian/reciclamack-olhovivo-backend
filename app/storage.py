@@ -20,3 +20,8 @@ class UploadStorage:
             expires = datetime.utcnow() + timedelta(hours=self.retention_hours)
             expires_iso = expires.replace(microsecond=0).isoformat() + "Z"
         return output, expires_iso
+
+    def save_label(self, image_path: Path, content: str) -> Path:
+        output = image_path.with_suffix(".txt")
+        output.write_text(content.rstrip() + "\n", encoding="utf-8")
+        return output

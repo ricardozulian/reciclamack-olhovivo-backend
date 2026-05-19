@@ -11,7 +11,9 @@ def test_cleanup_deletes_expired_files(tmp_path: Path) -> None:
     uploads = tmp_path / "uploads"
     uploads.mkdir(parents=True, exist_ok=True)
     sample = uploads / "sample.jpg"
+    label = uploads / "sample.txt"
     sample.write_bytes(b"image")
+    label.write_text("0 0.500000 0.500000 1.000000 1.000000\n", encoding="utf-8")
 
     repo = RequestRepository(db_path)
     repo.init()
@@ -27,6 +29,7 @@ def test_cleanup_deletes_expired_files(tmp_path: Path) -> None:
     deleted = run_cleanup_once(repo)
     assert deleted == 1
     assert not sample.exists()
+    assert not label.exists()
 
 
 def test_cleanup_skips_keep_mode_files(tmp_path: Path) -> None:
@@ -34,7 +37,9 @@ def test_cleanup_skips_keep_mode_files(tmp_path: Path) -> None:
     uploads = tmp_path / "uploads"
     uploads.mkdir(parents=True, exist_ok=True)
     sample = uploads / "sample.jpg"
+    label = uploads / "sample.txt"
     sample.write_bytes(b"image")
+    label.write_text("null\n", encoding="utf-8")
 
     repo = RequestRepository(db_path)
     repo.init()
@@ -50,3 +55,4 @@ def test_cleanup_skips_keep_mode_files(tmp_path: Path) -> None:
     deleted = run_cleanup_once(repo)
     assert deleted == 0
     assert sample.exists()
+    assert label.exists()

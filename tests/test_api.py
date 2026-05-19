@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import io
 from dataclasses import replace
 from pathlib import Path
 
 from fastapi.testclient import TestClient
+from PIL import Image
 
 from app.config import Settings
 from app.main import _load_model_class_names, create_app
@@ -49,6 +51,12 @@ def _settings(tmp_path: Path) -> Settings:
         image_retention_mode="ttl",
         cleanup_interval_seconds=9999,
     )
+
+
+def _png(width: int = 1, height: int = 1) -> bytes:
+    output = io.BytesIO()
+    Image.new("RGB", (width, height), color=(255, 255, 255)).save(output, format="PNG")
+    return output.getvalue()
 
 
 def test_health_and_classes(tmp_path: Path) -> None:
@@ -211,6 +219,79 @@ def test_analyze_image_response_shape(tmp_path: Path) -> None:
         assert "display_label_pt_br" in item
     for item in body["guidance"]:
         assert "display_label_pt_br" in item
+
+
+def test_analyze_image_writes_dataset_label_for_classified_upload(tmp_path: Path) -> None:
+    app = create_app(_settings(tmp_path))
+    client = TestClient(app)
+
+    app.state.detector.ready = True
+    app.state.detector.model_version = "test-model"
+    app.state.detector.predict = lambda _payload: [
+        {
+            "class_id": 0,
+            "class_name": "battery",
+            "confidence": 0.96,
+            "bbox": {"x1": 10, "y1": 20, "x2": 50, "y2": 80},
+        }
+    ]
+
+    resp = client.post(
+        "/v1/analyze-image",
+        files={"file": ("img.png", _png(width=100, height=200), "image/png")},
+    )
+
+    assert resp.status_code == 200
+    row = app.state.repository.fetch_request(resp.json()["request_id"])
+    assert row is not None
+    label_path = Path(row["stored_path"]).with_suffix(".txt")
+    assert label_path.read_text(encoding="utf-8") == (
+        "0 0.300000 0.250000 0.400000 0.300000\n"
+    )
+
+
+def test_analyze_image_writes_null_label_when_unclassified(tmp_path: Path) -> None:
+    app = create_app(_settings(tmp_path))
+    client = TestClient(app)
+
+    app.state.detector.ready = True
+    app.state.detector.model_version = "test-model"
+    app.state.detector.predict = lambda _payload: []
+
+    resp = client.post(
+        "/v1/analyze-image",
+        files={"file": ("img.png", _png(width=100, height=200), "image/png")},
+    )
+
+    assert resp.status_code == 200
+    row = app.state.repository.fetch_request(resp.json()["request_id"])
+    assert row is not None
+    assert Path(row["stored_path"]).with_suffix(".txt").read_text(encoding="utf-8") == "null\n"
+
+
+def test_analyze_image_writes_null_label_when_inference_fails(tmp_path: Path) -> None:
+    app = create_app(_settings(tmp_path))
+    client = TestClient(app)
+
+    def fail_predict(_payload: bytes) -> list[dict[str, object]]:
+        raise RuntimeError("boom")
+
+    app.state.detector.ready = True
+    app.state.detector.model_version = "test-model"
+    app.state.detector.predict = fail_predict
+
+    resp = client.post(
+        "/v1/analyze-image",
+        files={"file": ("img.png", _png(width=100, height=200), "image/png")},
+    )
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["uncertainty_flag"] is True
+    assert body["detections"] == []
+    row = app.state.repository.fetch_request(body["request_id"])
+    assert row is not None
+    assert Path(row["stored_path"]).with_suffix(".txt").read_text(encoding="utf-8") == "null\n"
 
 
 def test_analyze_image_persists_keep_retention_mode(tmp_path: Path) -> None:
