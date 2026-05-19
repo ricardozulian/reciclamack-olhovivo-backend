@@ -2,7 +2,7 @@
 
 API do projeto de extensão universitária **Olho Vivo — Identificação de Resíduos Eletroeletrônicos por Visão Computacional**, desenvolvido no âmbito da Universidade Presbiteriana Mackenzie, Faculdade de Computação e Informática (FCI).
 
-O backend recebe imagens enviadas pelo frontend, executa inferência com modelo YOLO11n exportado para ONNX e retorna detecções, orientações ambientais e pontos de coleta relacionados ao descarte correto de resíduos eletroeletrônicos.
+O backend recebe imagens enviadas pelo frontend, executa inferência com modelo YOLO11 exportado para ONNX e retorna detecções, orientações ambientais e pontos de coleta relacionados ao descarte correto de resíduos eletroeletrônicos.
 
 ## Contexto acadêmico
 
@@ -22,24 +22,25 @@ O backend recebe imagens enviadas pelo frontend, executa inferência com modelo 
 
 - API REST em Python com FastAPI.
 - Inferência local em CPU usando ONNX Runtime.
-- Modelo runtime em `app/model/yolo11n_ewaste.onnx`.
+- Modelo runtime padrão de teste v2 em `app/model/yolo11s_ewaste_v2_25class_512.onnx`.
 - Conteúdo ambiental em JSON.
 - Registro operacional leve em SQLite.
-- Retenção configurável de imagens enviadas para depuração e evolução do modelo.
+- Retenção configurável de imagens enviadas, com rótulos `.txt` pareados em formato YOLO para depuração e evolução do modelo.
 
 ## Variáveis de ambiente
 
-- `MODEL_PATH`: caminho do modelo ONNX. Padrão: `backend/app/model/yolo11n_ewaste.onnx`.
-- `HAZARDS_PATH`: conteúdo ambiental. Padrão: `backend/app/data/hazards_rules.json`.
+- `MODEL_PATH`: caminho do modelo ONNX. Para teste v2: `backend/app/model/yolo11s_ewaste_v2_25class_512.onnx`.
+- `MODEL_CLASSES_PATH`: ordem de classes do modelo. Para v2 512: `backend/app/model/ewaste_v2_25class.classes.txt`.
+- `HAZARDS_PATH`: conteúdo ambiental. Para v2 25 classes: `backend/app/data/hazards_rules_v2_25class.json`.
 - `COLLECTION_POINTS_PATH`: base de pontos de coleta.
 - `UPLOADS_DIR`: diretório temporário de uploads.
 - `SQLITE_PATH`: banco SQLite operacional.
-- `IMAGE_RETENTION_MODE`: política de retenção. `ttl` apaga após o prazo; `keep` preserva as imagens para depuração e treinamento. Padrão: `ttl`.
+- `IMAGE_RETENTION_MODE`: política de retenção. `ttl` apaga após o prazo; `keep` preserva as imagens e os `.txt` pareados para depuração e treinamento. Padrão: `ttl`.
 - `IMAGE_RETENTION_HOURS`: retenção de imagens quando `IMAGE_RETENTION_MODE=ttl`. Padrão: `24`.
 - `CLEANUP_INTERVAL_SECONDS`: intervalo da limpeza. Padrão: `3600`.
 - `MIN_CONFIDENCE`: confiança mínima. Padrão: `0.40`.
 - `NMS_IOU`: limiar de NMS. Padrão: `0.45`.
-- `INPUT_SIZE`: tamanho de entrada do modelo. Padrão: `640`.
+- `INPUT_SIZE`: tamanho de entrada do modelo. Para v2 512: `512`.
 - `MAX_UPLOAD_MB`: tamanho máximo de upload. Padrão: `10`.
 - `CORS_ALLOW_ORIGINS`: origens permitidas, separadas por vírgula.
 - `RATE_LIMIT_ANALYZE_PER_MINUTE`: limite por IP para `POST /v1/analyze-image`. Padrão local: `0` (desligado); deploy Compose: `30`.
