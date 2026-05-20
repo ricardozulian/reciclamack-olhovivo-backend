@@ -43,7 +43,8 @@ O backend recebe imagens enviadas pelo frontend, executa inferência com modelo 
 - `INPUT_SIZE`: tamanho de entrada do modelo. Para v2 512: `512`.
 - `MAX_UPLOAD_MB`: tamanho máximo de upload. Padrão: `10`.
 - `CORS_ALLOW_ORIGINS`: origens permitidas, separadas por vírgula.
-- `RATE_LIMIT_ANALYZE_PER_MINUTE`: limite por IP para `POST /v1/analyze-image`. Padrão local: `0` (desligado); deploy Compose: `30`.
+- `RATE_LIMIT_ANALYZE_PER_MINUTE`: limite por IP para `POST /v1/analyze-image`. Padrão: `30`.
+- `ENABLE_API_DOCS`: habilita `/docs`, `/redoc` e `/openapi.json` quando definido como `1`, `true`, `yes` ou `on`. Padrão: desabilitado.
 
 ## Contrato principal da API
 

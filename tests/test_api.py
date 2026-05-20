@@ -4,11 +4,12 @@ import io
 from dataclasses import replace
 from pathlib import Path
 
+from fastapi import Request
 from fastapi.testclient import TestClient
 from PIL import Image
 
 from app.config import Settings
-from app.main import _load_model_class_names, create_app
+from app.main import _client_ip, _load_model_class_names, create_app
 
 V2_25CLASS_MODEL_CLASSES = [
     "battery",
@@ -75,6 +76,26 @@ def test_health_and_classes(tmp_path: Path) -> None:
     assert payload["classes"]
     assert all("class_name" in item for item in payload["classes"])
     assert all("display_label_pt_br" in item for item in payload["classes"])
+
+
+def test_api_docs_are_disabled_by_default(tmp_path: Path) -> None:
+    app = create_app(_settings(tmp_path))
+    client = TestClient(app)
+
+    assert client.get("/docs").status_code == 404
+    assert client.get("/openapi.json").status_code == 404
+
+
+def test_api_responses_include_security_headers(tmp_path: Path) -> None:
+    app = create_app(_settings(tmp_path))
+    client = TestClient(app)
+
+    resp = client.get("/v1/health")
+
+    assert resp.headers["x-content-type-options"] == "nosniff"
+    assert resp.headers["x-frame-options"] == "DENY"
+    assert resp.headers["referrer-policy"] == "strict-origin-when-cross-origin"
+    assert resp.headers["permissions-policy"] == "camera=(self), microphone=()"
 
 
 def test_classes_endpoint_uses_active_v1_model_classes(tmp_path: Path) -> None:
@@ -147,6 +168,18 @@ def test_analyze_image_rejects_non_image(tmp_path: Path) -> None:
     assert resp.status_code == 400
 
 
+def test_analyze_image_rejects_spoofed_image_content_type(tmp_path: Path) -> None:
+    app = create_app(_settings(tmp_path))
+    client = TestClient(app)
+
+    resp = client.post(
+        "/v1/analyze-image",
+        files={"file": ("fake.jpg", b"not an image", "image/jpeg")},
+    )
+
+    assert resp.status_code == 400
+
+
 def test_analyze_image_rejects_oversized_upload(tmp_path: Path) -> None:
     settings = _settings(tmp_path)
     app = create_app(settings)
@@ -194,6 +227,43 @@ def test_analyze_image_rate_limit_is_opt_in(tmp_path: Path) -> None:
 
     assert first.status_code == 400
     assert second.status_code == 429
+
+
+def test_rate_limit_client_ip_uses_proxy_appended_address(tmp_path: Path) -> None:
+    app = create_app(_settings(tmp_path))
+    client = TestClient(app)
+
+    @app.get("/client-ip")
+    def client_ip(request: Request) -> dict[str, str]:
+        return {"client_ip": _client_ip(request)}
+
+    resp = client.get(
+        "/client-ip",
+        headers={"x-forwarded-for": "10.0.0.9, 172.31.0.3, 8.8.8.8"},
+    )
+
+    assert resp.status_code == 200
+    assert resp.json()["client_ip"] == "8.8.8.8"
+
+
+def test_rate_limit_client_ip_prefers_cloudfront_viewer_address(tmp_path: Path) -> None:
+    app = create_app(_settings(tmp_path))
+    client = TestClient(app)
+
+    @app.get("/client-ip")
+    def client_ip(request: Request) -> dict[str, str]:
+        return {"client_ip": _client_ip(request)}
+
+    resp = client.get(
+        "/client-ip",
+        headers={
+            "cloudfront-viewer-address": "2001:4860:4860::8888:443",
+            "x-forwarded-for": "1.2.3.4",
+        },
+    )
+
+    assert resp.status_code == 200
+    assert resp.json()["client_ip"] == "2001:4860:4860::8888"
 
 
 def test_analyze_image_response_shape(tmp_path: Path) -> None:

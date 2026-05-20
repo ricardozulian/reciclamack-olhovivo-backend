@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import io
+import ipaddress
 import logging
 import time
 import uuid
@@ -44,18 +45,33 @@ MODEL_CLASS_ALIASES = {
 
 
 def _client_ip(request: Request) -> str:
+    cloudfront_viewer = request.headers.get("cloudfront-viewer-address", "").strip()
+    if cloudfront_viewer:
+        host = cloudfront_viewer.rsplit(":", 1)[0].strip("[]")
+        if host:
+            return host
+
     forwarded = request.headers.get("x-forwarded-for", "")
     if forwarded:
-        return forwarded.split(",", 1)[0].strip()
+        candidates = [part.strip() for part in forwarded.split(",") if part.strip()]
+        for candidate in reversed(candidates):
+            try:
+                ip = ipaddress.ip_address(candidate)
+            except ValueError:
+                continue
+            if not ip.is_private and not ip.is_loopback and not ip.is_link_local:
+                return candidate
+        if candidates:
+            return candidates[-1]
     return request.client.host if request.client else "unknown"
 
 
 def _confidence_hint(confidence: float) -> str:
     if confidence >= 0.85:
-        return "Alta confianca"
+        return "Alta confiança"
     if confidence >= 0.60:
-        return "Confianca moderada"
-    return "Confianca baixa"
+        return "Confiança moderada"
+    return "Confiança baixa"
 
 
 def _load_model_class_names(path: Path) -> list[str]:
@@ -126,6 +142,14 @@ def _image_size(payload: bytes) -> tuple[int, int] | None:
             return image.size
     except (OSError, UnidentifiedImageError):
         return None
+
+
+def _verify_image_payload(payload: bytes) -> None:
+    try:
+        with Image.open(io.BytesIO(payload)) as image:
+            image.verify()
+    except (OSError, UnidentifiedImageError) as exc:
+        raise HTTPException(status_code=400, detail="Arquivo deve ser uma imagem válida.") from exc
 
 
 def _to_yolo_label_line(detection: dict[str, object], image_size: tuple[int, int]) -> str | None:
@@ -199,7 +223,13 @@ def _filter_v1_detections(
 
 def create_app(settings: Settings | None = None) -> FastAPI:
     app_settings = settings or get_settings()
-    app = FastAPI(title=app_settings.app_name, version="0.1.0")
+    app = FastAPI(
+        title=app_settings.app_name,
+        version="0.1.0",
+        docs_url="/docs" if app_settings.enable_api_docs else None,
+        redoc_url="/redoc" if app_settings.enable_api_docs else None,
+        openapi_url="/openapi.json" if app_settings.enable_api_docs else None,
+    )
     if app_settings.cors_allow_origins:
         app.add_middleware(
             CORSMiddleware,
@@ -246,6 +276,15 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     cleanup_task: asyncio.Task | None = None
     analyze_hits: dict[str, deque[float]] = defaultdict(deque)
 
+    @app.middleware("http")
+    async def security_headers(request: Request, call_next: Callable[[Request], Awaitable[Response]]) -> Response:
+        response = await call_next(request)
+        response.headers.setdefault("X-Content-Type-Options", "nosniff")
+        response.headers.setdefault("X-Frame-Options", "DENY")
+        response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
+        response.headers.setdefault("Permissions-Policy", "camera=(self), microphone=()")
+        return response
+
     class LoggedRoute(APIRoute):
         def get_route_handler(self) -> Callable[[Request], Awaitable[Response]]:
             original_route_handler = super().get_route_handler()
@@ -272,7 +311,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                             elapsed_ms,
                         )
                         response = JSONResponse(
-                            {"detail": "Muitas requisicoes. Tente novamente em instantes."},
+                            {"detail": "Muitas requisições. Tente novamente em instantes."},
                             status_code=429,
                         )
                         response.headers["X-Request-Id"] = req_id
@@ -357,6 +396,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             raise HTTPException(status_code=400, detail="Imagem vazia.")
         if len(payload) > app_settings.max_upload_mb * 1024 * 1024:
             raise HTTPException(status_code=413, detail="Imagem acima do limite permitido.")
+        _verify_image_payload(payload)
 
         request_id = str(uuid.uuid4())
         ext = Path(file.filename or "").suffix.lower() or ".jpg"
@@ -381,9 +421,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         )
         uncertainty_flag = len(filtered) == 0
         next_best_action = (
-            "Nao foi possivel identificar com boa confianca. Tente outra foto com melhor iluminacao."
+            "Não foi possível identificar com boa confiança. Tente outra foto com melhor iluminação."
             if uncertainty_flag
-            else "Confira as orientacoes e entregue o material em ponto de coleta autorizado."
+            else "Confira as orientações e entregue o material em ponto de coleta autorizado."
         )
 
         seen: set[str] = set()

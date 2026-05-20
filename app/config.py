@@ -30,8 +30,9 @@ class Settings:
     input_size: int = 640
     max_upload_mb: int = 10
     cors_allow_origins: tuple[str, ...] = ()
-    rate_limit_analyze_per_minute: int = 0
+    rate_limit_analyze_per_minute: int = 30
     max_response_classes: int = 1
+    enable_api_docs: bool = False
 
 
 def get_settings() -> Settings:
@@ -59,6 +60,7 @@ def get_settings() -> Settings:
         input_size=int(os.getenv("INPUT_SIZE", "640")),
         max_upload_mb=int(os.getenv("MAX_UPLOAD_MB", "10")),
         cors_allow_origins=cors_origins,
-        rate_limit_analyze_per_minute=int(os.getenv("RATE_LIMIT_ANALYZE_PER_MINUTE", "0")),
+        rate_limit_analyze_per_minute=int(os.getenv("RATE_LIMIT_ANALYZE_PER_MINUTE", "30")),
         max_response_classes=int(os.getenv("MAX_RESPONSE_CLASSES", "1")),
+        enable_api_docs=os.getenv("ENABLE_API_DOCS", "").strip().lower() in {"1", "true", "yes", "on"},
     )

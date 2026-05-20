@@ -6,12 +6,12 @@
       "display_label_pt_br": "bateria",
       "hazard_level": "alto",
       "health_risks": "pode liberar metais e compostos tóxicos quando perfurada ou superaquecida",
-      "environmental_risks": "alto risco de contaminação de solo e agua",
+      "environmental_risks": "alto risco de contaminação de solo e água",
       "typical_contents": [
         "lítio",
         "níquel",
         "cobalto",
-        "invólucro metalico"
+        "invólucro metálico"
       ],
       "disposal_instructions_br": [
         "Não descarte no lixo comum.",
@@ -20,7 +20,7 @@
       ],
       "legal_references": [
         "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
-        "Resolução CONAMA 401/2008 e atualizações - https://www.gov.br/ibama/pt-br/assuntos/emissoes-e-residuos/residuos/pilhas-e-baterias",
+        "Resolução CONAMA 401/2008 e atualizações - https://www.gov.br/ibama/pt-br/assuntos/emissoes-e-resíduos/resíduos/pilhas-e-baterias",
         "ABREMA Panorama dos Resíduos Sólidos no Brasil - https://www.abrema.org.br/panorama/"
       ]
     },
@@ -32,8 +32,8 @@
       "environmental_risks": "queima do isolamento pode liberar gases tóxicos",
       "typical_contents": [
         "cobre",
-        "plastico",
-        "conectores metalicos"
+        "plástico",
+        "conectores metálicos"
       ],
       "disposal_instructions_br": [
         "Não queime cabos para retirar cobre.",
@@ -51,13 +51,13 @@
       "class_name": "mobile_phone_tablet",
       "display_label_pt_br": "celular e tablet",
       "hazard_level": "alto",
-      "health_risks": "bateria e placa interna podem conter substâncias toxicas",
+      "health_risks": "bateria e placa interna podem conter substâncias tóxicas",
       "environmental_risks": "contaminação por metais e compostos eletrônicos",
       "typical_contents": [
         "bateria de lítio",
-        "placa eletronica",
+        "placa eletrônica",
         "vidro",
-        "plasticos"
+        "plásticos"
       ],
       "disposal_instructions_br": [
         "Não descarte no lixo comum.",
@@ -73,12 +73,12 @@
     {
       "class_name": "printer_multifunction",
       "display_label_pt_br": "impressora e multifuncional",
-      "hazard_level": "medio",
+      "hazard_level": "médio",
       "health_risks": "cartuchos e componentes internos podem conter resíduos químicos",
-      "environmental_risks": "descarte incorreto gera contaminação por plastico e metais",
+      "environmental_risks": "descarte incorreto gera contaminação por plástico e metais",
       "typical_contents": [
-        "placa eletronica",
-        "plasticos",
+        "placa eletrônica",
+        "plásticos",
         "metais",
         "cartucho ou tinta"
       ],
@@ -96,18 +96,18 @@
     {
       "class_name": "flat_monitor",
       "display_label_pt_br": "monitor plano",
-      "hazard_level": "medio",
-      "health_risks": "tela e componentes eletricos podem liberar resíduos quando quebrados",
-      "environmental_risks": "volume de plastico e metais com risco de contaminação",
+      "hazard_level": "médio",
+      "health_risks": "tela e componentes elétricos podem liberar resíduos quando quebrados",
+      "environmental_risks": "volume de plástico e metais com risco de contaminação",
       "typical_contents": [
         "painel LCD ou LED",
-        "placa eletronica",
-        "plasticos",
+        "placa eletrônica",
+        "plásticos",
         "metais"
       ],
       "disposal_instructions_br": [
         "Não quebre a tela.",
-        "Armazene em local seco ate descarte.",
+        "Armazene em local seco até descarte.",
         "Encaminhe para ponto de coleta de eletrônicos."
       ],
       "legal_references": [
@@ -121,16 +121,16 @@
       "display_label_pt_br": "mouse",
       "hazard_level": "baixo",
       "health_risks": "baixo risco quando intacto",
-      "environmental_risks": "resíduo plastico e eletrônico se descartado no lixo comum",
+      "environmental_risks": "resíduo plástico e eletrônico se descartado no lixo comum",
       "typical_contents": [
-        "placa eletronica",
-        "plastico",
+        "placa eletrônica",
+        "plástico",
         "sensor",
         "cabo ou bateria"
       ],
       "disposal_instructions_br": [
         "Não descarte no lixo comum.",
-        "Agrupe com perifericos pequenos.",
+        "Agrupe com periféricos pequenos.",
         "Entregue em ponto de coleta de eletroeletrônicos."
       ],
       "legal_references": [
@@ -146,13 +146,13 @@
       "environmental_risks": "alto potencial de contaminação ambiental",
       "typical_contents": [
         "bateria",
-        "placa eletronica",
-        "aluminio",
-        "plasticos"
+        "placa eletrônica",
+        "alumínio",
+        "plásticos"
       ],
       "disposal_instructions_br": [
-        "Não desmonte para descarte domestico.",
-        "Armazene em local seco ate envio.",
+        "Não desmonte para descarte doméstico.",
+        "Armazene em local seco até envio.",
         "Leve para coleta autorizada de e-lixo."
       ],
       "legal_references": [
@@ -166,12 +166,12 @@
       "display_label_pt_br": "componente de computador",
       "hazard_level": "alto",
       "health_risks": "placas e componentes podem conter metais e resíduos tóxicos",
-      "environmental_risks": "contaminacao persistente se descartado incorretamente; componentes avulsos devem seguir logistica reversa após a revogação da exclusão específica pelo Decreto 10.936/2022",
+      "environmental_risks": "contaminação persistente se descartado incorretamente; componentes avulsos devem seguir logística reversa após a revogação da exclusão específica pelo Decreto 10.936/2022",
       "typical_contents": [
-        "placa eletronica",
-        "solda metalica",
+        "placa eletrônica",
+        "solda metálica",
         "cobre",
-        "plasticos"
+        "plásticos"
       ],
       "disposal_instructions_br": [
         "Não queime nem descarte no lixo comum.",
@@ -187,15 +187,15 @@
     },
     {
       "class_name": "portable_music_player",
-      "display_label_pt_br": "caixa de som e player portatil",
-      "hazard_level": "medio",
-      "health_risks": "bateria interna e eletricos podem gerar risco quando danificados",
-      "environmental_risks": "descarte inadequado contamina solo por plastico e metais",
+      "display_label_pt_br": "caixa de som e player portátil",
+      "hazard_level": "médio",
+      "health_risks": "bateria interna e elétricos podem gerar risco quando danificados",
+      "environmental_risks": "descarte inadequado contamina solo por plástico e metais",
       "typical_contents": [
         "alto-falante",
-        "placa eletronica",
+        "placa eletrônica",
         "bateria",
-        "plasticos"
+        "plásticos"
       ],
       "disposal_instructions_br": [
         "Não descarte no lixo comum.",
@@ -211,18 +211,18 @@
     {
       "class_name": "network_device",
       "display_label_pt_br": "dispositivo de rede",
-      "hazard_level": "medio",
-      "health_risks": "componentes eletricos e fonte interna podem conter materiais nocivos",
+      "hazard_level": "médio",
+      "health_risks": "componentes elétricos e fonte interna podem conter materiais nocivos",
       "environmental_risks": "resíduo eletrônico contaminante em descarte comum",
       "typical_contents": [
-        "placa eletronica",
+        "placa eletrônica",
         "antenas",
-        "plasticos",
+        "plásticos",
         "metais"
       ],
       "disposal_instructions_br": [
         "Não descarte no lixo comum.",
-        "Remova cabos e fontes destacaveis quando possível.",
+        "Remova cabos e fontes destacáveis quando possível.",
         "Encaminhe para logística reversa de eletrônicos."
       ],
       "legal_references": [
@@ -234,19 +234,19 @@
     {
       "class_name": "landline_telephone",
       "display_label_pt_br": "telefone fixo e sem fio",
-      "hazard_level": "medio",
-      "health_risks": "baixo risco direto quando intacto; modelos sem fio podem conter bateria recarregavel",
-      "environmental_risks": "gera resíduo plastico e eletrônico se descartado incorretamente; baterias removiveis exigem descarte separado",
+      "hazard_level": "médio",
+      "health_risks": "baixo risco direto quando intacto; modelos sem fio podem conter bateria recarregável",
+      "environmental_risks": "gera resíduo plástico e eletrônico se descartado incorretamente; baterias removíveis exigem descarte separado",
       "typical_contents": [
-        "placa eletronica",
-        "plastico",
+        "placa eletrônica",
+        "plástico",
         "cabo",
         "teclado",
         "bateria em modelos sem fio"
       ],
       "disposal_instructions_br": [
         "Não descarte no lixo comum.",
-        "Remova bateria ou pilhas recarregaveis quando forem destacaveis e descarte separadamente.",
+        "Remova bateria ou pilhas recarregáveis quando forem destacáveis e descarte separadamente.",
         "Agrupe base, monofone, cabos e fonte para levar a ponto de coleta autorizado."
       ],
       "legal_references": [
@@ -257,13 +257,13 @@
     },
     {
       "class_name": "crt_monitor",
-      "display_label_pt_br": "monitor CRT e televisao de tubo",
+      "display_label_pt_br": "monitor CRT e televisão de tubo",
       "hazard_level": "alto",
-      "health_risks": "tubo CRT pode conter chumbo no vidro e componentes internos perigosos; nao deve ser quebrado ou desmontado",
+      "health_risks": "tubo CRT pode conter chumbo no vidro e componentes internos perigosos; não deve ser quebrado ou desmontado",
       "environmental_risks": "alto impacto por volume e composição do equipamento",
       "typical_contents": [
         "tubo de vidro",
-        "placa eletronica",
+        "placa eletrônica",
         "metais",
         "cabos"
       ],
@@ -285,14 +285,14 @@
       "health_risks": "baixo risco direto para usuário",
       "environmental_risks": "resíduo eletrônico pequeno mas persistente",
       "typical_contents": [
-        "memoria flash",
-        "placa eletronica",
-        "plastico",
-        "conector metalico"
+        "memória flash",
+        "placa eletrônica",
+        "plástico",
+        "conector metálico"
       ],
       "disposal_instructions_br": [
         "Não descarte no lixo comum.",
-        "Agrupe com perifericos pequenos.",
+        "Agrupe com periféricos pequenos.",
         "Descarte em ponto de coleta de e-lixo."
       ],
       "legal_references": [
@@ -304,14 +304,14 @@
     {
       "class_name": "ink_toner_cartridge",
       "display_label_pt_br": "cartucho de tinta e toner",
-      "hazard_level": "medio",
-      "health_risks": "po de toner e tinta podem irritar pele e vias respiratorias",
-      "environmental_risks": "contaminação por resíduos químicos e plastico",
+      "hazard_level": "médio",
+      "health_risks": "pó de toner e tinta podem irritar pele e vias respiratórias",
+      "environmental_risks": "contaminação por resíduos químicos e plástico",
       "typical_contents": [
-        "po de toner ou tinta",
-        "plastico",
+        "pó de toner ou tinta",
+        "plástico",
         "chips",
-        "partes metalicas"
+        "partes metálicas"
       ],
       "disposal_instructions_br": [
         "Não descarte no lixo comum.",
@@ -326,13 +326,13 @@
     },
     {
       "class_name": "camera",
-      "display_label_pt_br": "camera",
-      "hazard_level": "medio",
+      "display_label_pt_br": "câmera",
+      "hazard_level": "médio",
       "health_risks": "bateria e eletrônicos internos podem causar risco quando danificados",
-      "environmental_risks": "resíduo eletrônico com metais e plasticos",
+      "environmental_risks": "resíduo eletrônico com metais e plásticos",
       "typical_contents": [
         "sensor",
-        "placa eletronica",
+        "placa eletrônica",
         "lente",
         "bateria"
       ],
@@ -352,16 +352,16 @@
       "display_label_pt_br": "teclado",
       "hazard_level": "baixo",
       "health_risks": "baixo risco direto quando intacto",
-      "environmental_risks": "gera resíduo plastico e eletrônico em descarte comum",
+      "environmental_risks": "gera resíduo plástico e eletrônico em descarte comum",
       "typical_contents": [
-        "placa eletronica",
+        "placa eletrônica",
         "membrana",
-        "plastico",
+        "plástico",
         "cabo ou bateria"
       ],
       "disposal_instructions_br": [
         "Não descarte no lixo comum.",
-        "Agrupe com perifericos para coleta conjunta.",
+        "Agrupe com periféricos para coleta conjunta.",
         "Leve a ponto de coleta de e-lixo."
       ],
       "legal_references": [
@@ -372,14 +372,14 @@
     {
       "class_name": "power_source_charger",
       "display_label_pt_br": "fonte e carregador",
-      "hazard_level": "medio",
-      "health_risks": "componentes eletricos podem aquecer ou vazar quando danificados",
+      "hazard_level": "médio",
+      "health_risks": "componentes elétricos podem aquecer ou vazar quando danificados",
       "environmental_risks": "resíduo eletrônico contaminante em descarte comum",
       "typical_contents": [
         "transformador",
-        "placa eletronica",
+        "placa eletrônica",
         "cabos",
-        "plasticos"
+        "plásticos"
       ],
       "disposal_instructions_br": [
         "Não descarte no lixo comum.",
@@ -397,12 +397,12 @@
       "display_label_pt_br": "controle remoto",
       "hazard_level": "baixo",
       "health_risks": "baixo risco direto, exceto pilhas internas",
-      "environmental_risks": "descartado no lixo comum soma plastico e componentes eletrônicos",
+      "environmental_risks": "descartado no lixo comum soma plástico e componentes eletrônicos",
       "typical_contents": [
-        "placa eletronica",
-        "plastico",
+        "placa eletrônica",
+        "plástico",
         "pilhas",
-        "contatos metalicos"
+        "contatos metálicos"
       ],
       "disposal_instructions_br": [
         "Remova pilhas e descarte separadamente.",
@@ -417,15 +417,15 @@
     },
     {
       "class_name": "power_tool",
-      "display_label_pt_br": "ferramenta eletrica",
-      "hazard_level": "medio",
+      "display_label_pt_br": "ferramenta elétrica",
+      "hazard_level": "médio",
       "health_risks": "bateria e motor podem gerar risco se danificados",
-      "environmental_risks": "contaminação por metais, oleos e baterias",
+      "environmental_risks": "contaminação por metais, óleos e baterias",
       "typical_contents": [
         "motor",
-        "placa eletronica",
+        "placa eletrônica",
         "bateria",
-        "carcaça plastica ou metalica"
+        "carcaça plastica ou metálica"
       ],
       "disposal_instructions_br": [
         "Não descarte no lixo comum.",
@@ -445,10 +445,10 @@
       "health_risks": "baixo risco direto quando intacto",
       "environmental_risks": "resíduo eletrônico em descarte comum",
       "typical_contents": [
-        "placa eletronica",
+        "placa eletrônica",
         "alto-falante",
         "display",
-        "plastico"
+        "plástico"
       ],
       "disposal_instructions_br": [
         "Não descarte no lixo comum.",
@@ -466,16 +466,16 @@
       "display_label_pt_br": "headset e fone",
       "hazard_level": "baixo",
       "health_risks": "baixo risco direto",
-      "environmental_risks": "resíduo plastico e eletrônico se descartado incorretamente",
+      "environmental_risks": "resíduo plástico e eletrônico se descartado incorretamente",
       "typical_contents": [
         "alto-falantes",
-        "plastico",
+        "plástico",
         "cabos",
         "bateria em modelos sem fio"
       ],
       "disposal_instructions_br": [
         "Não descarte no lixo comum.",
-        "Agrupe com perifericos pequenos.",
+        "Agrupe com periféricos pequenos.",
         "Descarte em ponto de coleta autorizado."
       ],
       "legal_references": [
@@ -488,16 +488,16 @@
       "display_label_pt_br": "microfone",
       "hazard_level": "baixo",
       "health_risks": "baixo risco direto quando intacto",
-      "environmental_risks": "resíduo eletrônico e plastico em descarte comum",
+      "environmental_risks": "resíduo eletrônico e plástico em descarte comum",
       "typical_contents": [
-        "capsula",
-        "placa eletronica",
+        "cápsula",
+        "placa eletrônica",
         "metal",
-        "plastico"
+        "plástico"
       ],
       "disposal_instructions_br": [
         "Não descarte no lixo comum.",
-        "Agrupe com acessórios de audio.",
+        "Agrupe com acessórios de áudio.",
         "Leve para coleta de eletroeletrônicos."
       ],
       "legal_references": [
@@ -508,12 +508,12 @@
     {
       "class_name": "smart_watch",
       "display_label_pt_br": "relógio inteligente",
-      "hazard_level": "medio",
+      "hazard_level": "médio",
       "health_risks": "bateria e tela podem liberar materiais nocivos se danificadas",
       "environmental_risks": "bateria integrada não removível dificulta reciclagem e eleva risco de descarte inadequado",
       "typical_contents": [
         "bateria",
-        "placa eletronica",
+        "placa eletrônica",
         "display",
         "pulseira"
       ],
@@ -530,14 +530,14 @@
     },
     {
       "class_name": "home_appliance",
-      "display_label_pt_br": "eletrodomestico",
-      "hazard_level": "medio",
-      "health_risks": "componentes eletricos e motores podem conter materiais nocivos",
+      "display_label_pt_br": "eletrodoméstico",
+      "hazard_level": "médio",
+      "health_risks": "componentes elétricos e motores podem conter materiais nocivos",
       "environmental_risks": "equipamentos volumosos aumentam risco de descarte irregular",
       "typical_contents": [
         "motor",
         "cabos",
-        "placas eletronicas",
+        "placas eletrônicas",
         "metais",
         "magnetron e capacitor de alta tensão em micro-ondas"
       ],
@@ -545,7 +545,7 @@
         "Não descarte em lixo comum ou entulho.",
         "Solicite coleta específica quando o item for grande.",
         "Para micro-ondas, não abra a carcaça nem tente remover o magnetron ou o capacitor interno.",
-        "Entregue em ecoponto com recebimento de eletrodomesticos."
+        "Entregue em ecoponto com recebimento de eletrodomésticos."
       ],
       "legal_references": [
         "PNRS Lei 12.305/2010 - https://www.planalto.gov.br/ccivil_03/_Ato2007-2010/2010/Lei/L12305.htm",
@@ -556,11 +556,11 @@
     {
       "class_name": "home_theater",
       "display_label_pt_br": "home theater",
-      "hazard_level": "medio",
+      "hazard_level": "médio",
       "health_risks": "fontes e componentes internos podem conter materiais nocivos",
-      "environmental_risks": "equipamento volumoso com plastico e metais",
+      "environmental_risks": "equipamento volumoso com plástico e metais",
       "typical_contents": [
-        "placa eletronica",
+        "placa eletrônica",
         "alto-falantes",
         "cabos",
         "metais"
