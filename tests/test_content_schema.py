@@ -107,6 +107,8 @@ def test_every_v2_class_has_complete_return_card_content() -> None:
         assert len(card["disposal_instructions_br"]) >= 3
         assert len(card["legal_references"]) >= 2
 
+    assert cards["home_theater"]["display_label_pt_br"] == "equipamento de áudio e vídeo"
+
 
 def test_v2_25class_runtime_content_matches_model_order() -> None:
     base = Path(__file__).resolve().parents[1] / "app"

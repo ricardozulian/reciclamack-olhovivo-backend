@@ -36,7 +36,7 @@ V2_25CLASS_MODEL_CLASSES = [
     "microphone",
     "smart_watch",
     "home_appliance",
-    "home_theater",
+    "av_equipment",
 ]
 
 
@@ -140,9 +140,12 @@ def test_classes_endpoint_uses_v2_25class_runtime_pairing(tmp_path: Path) -> Non
     resp = client.get("/v1/classes")
 
     assert resp.status_code == 200
-    class_names = [item["class_name"] for item in resp.json()["classes"]]
+    classes = resp.json()["classes"]
+    class_names = [item["class_name"] for item in classes]
     assert class_names == V2_25CLASS_MODEL_CLASSES
     assert "capacitor" not in class_names
+    av_equipment = next(item for item in classes if item["class_name"] == "av_equipment")
+    assert av_equipment["display_label_pt_br"] == "equipamento de áudio e vídeo"
     assert app.state.detector.config.input_size == 512
 
 
@@ -211,7 +214,7 @@ def test_analyze_image_rate_limit_is_opt_in(tmp_path: Path) -> None:
         max_upload_mb=settings.max_upload_mb,
         cors_allow_origins=settings.cors_allow_origins,
         rate_limit_analyze_per_minute=1,
-        max_response_classes=settings.max_response_classes,
+        max_response_detections=settings.max_response_detections,
     )
     app = create_app(settings)
     client = TestClient(app)
@@ -272,16 +275,14 @@ def test_analyze_image_response_shape(tmp_path: Path) -> None:
 
     # Mock detector because model is intentionally absent in unit tests.
     app.dependency_overrides = {}
-    image = (
-        b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01"
-        b"\x08\x02\x00\x00\x00\x90wS\xde\x00\x00\x00\nIDATx\x9cc`\x00\x00\x00"
-        b"\x02\x00\x01\xe2!\xbc3\x00\x00\x00\x00IEND\xaeB`\x82"
-    )
+    image = _png()
     resp = client.post("/v1/analyze-image", files={"file": ("img.png", image, "image/png")})
     assert resp.status_code == 200
     body = resp.json()
     assert "request_id" in body
     assert "model_version" in body
+    assert body["image_width"] == 1
+    assert body["image_height"] == 1
     assert isinstance(body["detections"], list)
     assert isinstance(body["guidance"], list)
     assert "uncertainty_flag" in body
@@ -378,11 +379,7 @@ def test_analyze_image_persists_keep_retention_mode(tmp_path: Path) -> None:
     app = create_app(settings)
     client = TestClient(app)
 
-    image = (
-        b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01"
-        b"\x08\x02\x00\x00\x00\x90wS\xde\x00\x00\x00\nIDATx\x9cc`\x00\x00\x00"
-        b"\x02\x00\x01\xe2!\xbc3\x00\x00\x00\x00IEND\xaeB`\x82"
-    )
+    image = _png()
     resp = client.post("/v1/analyze-image", files={"file": ("img.png", image, "image/png")})
 
     assert resp.status_code == 200
@@ -392,7 +389,7 @@ def test_analyze_image_persists_keep_retention_mode(tmp_path: Path) -> None:
     assert row["expires_at"] == "9999-12-31T23:59:59Z"
 
 
-def test_analyze_image_suppresses_overlapping_cross_class_detections(tmp_path: Path) -> None:
+def test_analyze_image_filters_unsupported_detections(tmp_path: Path) -> None:
     app = create_app(_settings(tmp_path))
     client = TestClient(app)
 
@@ -419,11 +416,7 @@ def test_analyze_image_suppresses_overlapping_cross_class_detections(tmp_path: P
         },
     ]
 
-    image = (
-        b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01"
-        b"\x08\x02\x00\x00\x00\x90wS\xde\x00\x00\x00\nIDATx\x9cc`\x00\x00\x00"
-        b"\x02\x00\x01\xe2!\xbc3\x00\x00\x00\x00IEND\xaeB`\x82"
-    )
+    image = _png()
     resp = client.post("/v1/analyze-image", files={"file": ("img.png", image, "image/png")})
 
     assert resp.status_code == 200
@@ -432,8 +425,9 @@ def test_analyze_image_suppresses_overlapping_cross_class_detections(tmp_path: P
     assert [item["class_name"] for item in body["guidance"]] == ["battery"]
 
 
-def test_analyze_image_v1_caps_response_to_top_class(tmp_path: Path) -> None:
-    app = create_app(_settings(tmp_path))
+def test_analyze_image_returns_all_supported_object_instances(tmp_path: Path) -> None:
+    settings = replace(_settings(tmp_path), max_response_detections=3)
+    app = create_app(settings)
     client = TestClient(app)
 
     app.state.detector.ready = True
@@ -443,24 +437,57 @@ def test_analyze_image_v1_caps_response_to_top_class(tmp_path: Path) -> None:
             "class_id": 0,
             "class_name": "battery",
             "confidence": 0.96,
-            "bbox": {"x1": 10, "y1": 10, "x2": 110, "y2": 110},
+            "bbox": {"x1": 10, "y1": 10, "x2": 40, "y2": 40},
         },
         {
-            "class_id": 25,
-            "class_name": "smart_watch",
+            "class_id": 0,
+            "class_name": "battery",
             "confidence": 0.95,
-            "bbox": {"x1": 200, "y1": 200, "x2": 260, "y2": 260},
+            "bbox": {"x1": 50, "y1": 50, "x2": 80, "y2": 80},
+        },
+        {
+            "class_id": 1,
+            "class_name": "cable",
+            "confidence": 0.94,
+            "bbox": {"x1": 15, "y1": 60, "x2": 90, "y2": 75},
+        },
+        {
+            "class_id": 6,
+            "class_name": "laptop",
+            "confidence": 0.93,
+            "bbox": {"x1": 5, "y1": 5, "x2": 95, "y2": 95},
         },
     ]
 
-    image = (
-        b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01"
-        b"\x08\x02\x00\x00\x00\x90wS\xde\x00\x00\x00\nIDATx\x9cc`\x00\x00\x00"
-        b"\x02\x00\x01\xe2!\xbc3\x00\x00\x00\x00IEND\xaeB`\x82"
+    resp = client.post(
+        "/v1/analyze-image",
+        files={"file": ("img.png", _png(width=100, height=100), "image/png")},
     )
-    resp = client.post("/v1/analyze-image", files={"file": ("img.png", image, "image/png")})
 
     assert resp.status_code == 200
     body = resp.json()
-    assert [item["class_name"] for item in body["detections"]] == ["battery"]
-    assert [item["class_name"] for item in body["guidance"]] == ["battery"]
+    assert [item["class_name"] for item in body["detections"]] == [
+        "battery",
+        "battery",
+        "cable",
+    ]
+    assert [item["class_name"] for item in body["guidance"]] == ["battery", "cable"]
+
+
+def test_analyze_image_reports_exif_transposed_dimensions(tmp_path: Path) -> None:
+    output = io.BytesIO()
+    image = Image.new("RGB", (40, 20), color=(255, 255, 255))
+    exif = Image.Exif()
+    exif[274] = 6
+    image.save(output, format="JPEG", exif=exif)
+
+    app = create_app(_settings(tmp_path))
+    client = TestClient(app)
+    resp = client.post(
+        "/v1/analyze-image",
+        files={"file": ("rotated.jpg", output.getvalue(), "image/jpeg")},
+    )
+
+    assert resp.status_code == 200
+    assert resp.json()["image_width"] == 20
+    assert resp.json()["image_height"] == 40

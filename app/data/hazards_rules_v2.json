@@ -1,5 +1,5 @@
 {
-  "content_version": "2026.05.13-v2-sourced",
+  "content_version": "2026.08.07-v2-user-facing-labels",
   "classes": [
     {
       "class_name": "battery",
@@ -72,7 +72,7 @@
     },
     {
       "class_name": "mobile_phone_tablet",
-      "display_label_pt_br": "celular e tablet",
+      "display_label_pt_br": "telefone celular, tablet e e-reader",
       "hazard_level": "alto",
       "health_risks": "bateria e placa interna podem conter substâncias toxicas",
       "environmental_risks": "contaminação por metais e compostos eletrônicos",
@@ -511,7 +511,7 @@
     },
     {
       "class_name": "home_theater",
-      "display_label_pt_br": "home theater",
+      "display_label_pt_br": "equipamento de áudio e vídeo",
       "hazard_level": "medio",
       "health_risks": "fontes e componentes internos podem conter materiais nocivos",
       "environmental_risks": "equipamento volumoso com plastico e metais",

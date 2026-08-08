@@ -14,13 +14,13 @@ from typing import Awaitable, Callable
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.routing import APIRoute
-from PIL import Image, UnidentifiedImageError
+from PIL import Image, ImageOps, UnidentifiedImageError
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 
 from .cleanup import cleanup_loop
 from .config import Settings, get_settings
-from .content import ContentStore
+from .content import ContentStore, normalize_class_name
 from .inference import DetectorConfig, OnnxDetector
 from .repository import RequestRepository
 from .schemas import AnalyzeImageResponse, ClassHint, ClassesResponse, GuidanceItem, HealthResponse
@@ -82,7 +82,7 @@ def _load_model_class_names(path: Path) -> list[str]:
         name = raw.strip()
         if not name or name.startswith("#"):
             continue
-        names.append(MODEL_CLASS_ALIASES.get(name.lower(), name))
+        names.append(normalize_class_name(MODEL_CLASS_ALIASES.get(name.lower(), name)))
     return names
 
 
@@ -113,25 +113,6 @@ def _active_content_classes(model_class_names: list[str], content_store: Content
     return active or content_store.supported_classes()
 
 
-def _bbox_iou(a: dict[str, object], b: dict[str, object]) -> float:
-    a_box = a["bbox"]
-    b_box = b["bbox"]
-    if not isinstance(a_box, dict) or not isinstance(b_box, dict):
-        return 0.0
-    ax1, ay1, ax2, ay2 = float(a_box["x1"]), float(a_box["y1"]), float(a_box["x2"]), float(a_box["y2"])
-    bx1, by1, bx2, by2 = float(b_box["x1"]), float(b_box["y1"]), float(b_box["x2"]), float(b_box["y2"])
-    ix1, iy1 = max(ax1, bx1), max(ay1, by1)
-    ix2, iy2 = min(ax2, bx2), min(ay2, by2)
-    iw, ih = max(0.0, ix2 - ix1), max(0.0, iy2 - iy1)
-    intersection = iw * ih
-    if intersection <= 0:
-        return 0.0
-    area_a = max(0.0, ax2 - ax1) * max(0.0, ay2 - ay1)
-    area_b = max(0.0, bx2 - bx1) * max(0.0, by2 - by1)
-    union = area_a + area_b - intersection
-    return intersection / union if union > 0 else 0.0
-
-
 def _clamp(value: float, lower: float = 0.0, upper: float = 1.0) -> float:
     return max(lower, min(upper, value))
 
@@ -139,7 +120,7 @@ def _clamp(value: float, lower: float = 0.0, upper: float = 1.0) -> float:
 def _image_size(payload: bytes) -> tuple[int, int] | None:
     try:
         with Image.open(io.BytesIO(payload)) as image:
-            return image.size
+            return ImageOps.exif_transpose(image).size
     except (OSError, UnidentifiedImageError):
         return None
 
@@ -195,8 +176,7 @@ def _filter_v1_detections(
     detections: list[dict[str, object]],
     supported_classes: set[str],
     min_confidence: float,
-    iou_threshold: float,
-    max_response_classes: int,
+    max_response_detections: int,
 ) -> list[dict[str, object]]:
     eligible = [
         detection
@@ -205,27 +185,16 @@ def _filter_v1_detections(
         and str(detection.get("class_name", "")).lower() in supported_classes
     ]
     eligible.sort(key=lambda item: float(item.get("confidence", 0.0)), reverse=True)
-
-    kept: list[dict[str, object]] = []
-    seen_classes: set[str] = set()
-    for detection in eligible:
-        class_name = str(detection["class_name"]).lower()
-        if class_name in seen_classes:
-            continue
-        if any(_bbox_iou(detection, other) > iou_threshold for other in kept):
-            continue
-        kept.append(detection)
-        seen_classes.add(class_name)
-        if max_response_classes > 0 and len(seen_classes) >= max_response_classes:
-            break
-    return kept
+    if max_response_detections > 0:
+        return eligible[:max_response_detections]
+    return eligible
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
     app_settings = settings or get_settings()
     app = FastAPI(
         title=app_settings.app_name,
-        version="0.1.0",
+        version="0.2.0",
         docs_url="/docs" if app_settings.enable_api_docs else None,
         redoc_url="/redoc" if app_settings.enable_api_docs else None,
         openapi_url="/openapi.json" if app_settings.enable_api_docs else None,
@@ -416,8 +385,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             detections=detections,
             supported_classes=set(active_class_names),
             min_confidence=app_settings.min_confidence,
-            iou_threshold=app_settings.nms_iou,
-            max_response_classes=app_settings.max_response_classes,
+            max_response_detections=app_settings.max_response_detections,
         )
         uncertainty_flag = len(filtered) == 0
         next_best_action = (
@@ -454,9 +422,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 )
             )
 
+        image_size = _image_size(payload)
         label_content = _dataset_label_content(
             response_detections,
-            _image_size(payload),
+            image_size,
             inference_failed,
         )
         try:
@@ -481,6 +450,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             model_version=detector.model_version,
             content_version=content_store.content_version,
             processed_at=datetime.now(timezone.utc),
+            image_width=image_size[0] if image_size else 0,
+            image_height=image_size[1] if image_size else 0,
             detections=response_detections,
             guidance=guidance,
             uncertainty_flag=uncertainty_flag,

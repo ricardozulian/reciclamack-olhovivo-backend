@@ -34,6 +34,8 @@ class AnalyzeImageResponse(BaseModel):
     model_version: str
     content_version: str
     processed_at: datetime
+    image_width: int
+    image_height: int
     detections: list[Detection]
     guidance: list[GuidanceItem]
     uncertainty_flag: bool

@@ -83,3 +83,22 @@ python -m pytest
 ## Papel no sistema
 
 Este repositório é autônomo e contém apenas a API de inferência e conteúdo ambiental. O frontend e o pipeline de treinamento ficam em repositórios separados.
+
+## Ambiente Docker de integração
+
+A bancada reproduzível vigente está em `../deploy/local`; execute o comando abaixo a partir da raiz do workspace. Ela publica a interface em `http://192.168.1.51:8088`, a API em `http://192.168.1.51:8000` e monta o ONNX e seu arquivo de classes somente para leitura.
+
+```powershell
+.\deploy\local\run_model.ps1
+```
+
+Os padrões internos da aplicação continuam sendo retenção de 24 horas e limpeza por hora. O Compose local e o pacote Jetson substituem explicitamente esses valores por `168` horas e `86400` segundos, respectivamente. O ambiente local também habilita `/docs` e desabilita o rate limiting apenas para testes na LAN.
+
+No runtime, o identificador legado `home_theater` é aceito e normalizado para o nome canônico `av_equipment`, preservando a classe ID 24. A troca e a promoção de modelos são responsabilidade da camada de implantação e da sessão de treinamento; consulte `../deploy/MODEL_TEST_HANDOFF.md`.
+
+
+## API v0.2.0 e imagens anotadas
+
+A resposta de `POST /v1/analyze-image` inclui `image_width`, `image_height` e todas as detecções válidas após o NMS, limitada por `MAX_RESPONSE_DETECTIONS` (padrão: `8`). As caixas usam coordenadas em pixels da imagem orientada para exibição. O frontend desenha as caixas sobre a própria foto; a API não cria uma segunda cópia anotada.
+
+A prévia do totem permanece no navegador conectado localmente ao Jetson. Somente uma foto é enviada à API por interação, sem transmissão contínua de vídeo. As previsões e os rótulos auxiliares persistidos continuam sendo resultados automáticos não auditados.

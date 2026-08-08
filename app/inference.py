@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageOps
 
 try:
     import onnxruntime as ort
@@ -62,7 +62,7 @@ class OnnxDetector:
         return self._postprocess(raw_outputs, scale)
 
     def _preprocess(self, image_bytes: bytes) -> tuple[np.ndarray, tuple[float, float]]:
-        img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+        img = ImageOps.exif_transpose(Image.open(io.BytesIO(image_bytes))).convert("RGB")
         ow, oh = img.size
         resized = img.resize((self._input_w, self._input_h))
         arr = np.asarray(resized, dtype=np.float32) / 255.0
