@@ -23,6 +23,15 @@ class DetectorConfig:
     class_names: list[str]
 
 
+@dataclass(frozen=True)
+class LetterboxTransform:
+    scale: float
+    pad_x: int
+    pad_y: int
+    original_width: int
+    original_height: int
+
+
 class OnnxDetector:
     def __init__(self, config: DetectorConfig):
         self.config = config
@@ -57,21 +66,32 @@ class OnnxDetector:
     def predict(self, image_bytes: bytes) -> list[dict[str, Any]]:
         if not self.ready:
             return []
-        image_tensor, scale = self._preprocess(image_bytes)
+        image_tensor, transform = self._preprocess(image_bytes)
         raw_outputs = self._session.run(None, {self._input_name: image_tensor})[0]
-        return self._postprocess(raw_outputs, scale)
+        return self._postprocess(raw_outputs, transform)
 
-    def _preprocess(self, image_bytes: bytes) -> tuple[np.ndarray, tuple[float, float]]:
+    def _preprocess(self, image_bytes: bytes) -> tuple[np.ndarray, LetterboxTransform]:
         img = ImageOps.exif_transpose(Image.open(io.BytesIO(image_bytes))).convert("RGB")
         ow, oh = img.size
-        resized = img.resize((self._input_w, self._input_h))
-        arr = np.asarray(resized, dtype=np.float32) / 255.0
+        scale = min(self._input_w / ow, self._input_h / oh)
+        resized_width = max(1, int(round(ow * scale)))
+        resized_height = max(1, int(round(oh * scale)))
+        resized = img.resize(
+            (resized_width, resized_height), Image.Resampling.BILINEAR
+        )
+        pad_x = (self._input_w - resized_width) // 2
+        pad_y = (self._input_h - resized_height) // 2
+        letterboxed = Image.new(
+            "RGB", (self._input_w, self._input_h), (114, 114, 114)
+        )
+        letterboxed.paste(resized, (pad_x, pad_y))
+        arr = np.asarray(letterboxed, dtype=np.float32) / 255.0
         arr = np.transpose(arr, (2, 0, 1))[None, ...]
-        sx = ow / self._input_w
-        sy = oh / self._input_h
-        return arr, (sx, sy)
+        return arr, LetterboxTransform(scale, pad_x, pad_y, ow, oh)
 
-    def _postprocess(self, outputs: np.ndarray, scale: tuple[float, float]) -> list[dict[str, Any]]:
+    def _postprocess(
+        self, outputs: np.ndarray, transform: LetterboxTransform
+    ) -> list[dict[str, Any]]:
         if outputs.ndim != 3:
             return []
         preds = outputs[0]
@@ -107,11 +127,24 @@ class OnnxDetector:
             confidence = obj_conf * float(class_scores[class_id])
             if confidence < self.config.confidence_threshold:
                 continue
-            sx, sy = scale
-            x1 = max(0.0, (x - w / 2) * sx)
-            y1 = max(0.0, (y - h / 2) * sy)
-            x2 = max(0.0, (x + w / 2) * sx)
-            y2 = max(0.0, (y + h / 2) * sy)
+            x1 = min(
+                float(transform.original_width),
+                max(0.0, float(x - w / 2 - transform.pad_x) / transform.scale),
+            )
+            y1 = min(
+                float(transform.original_height),
+                max(0.0, float(y - h / 2 - transform.pad_y) / transform.scale),
+            )
+            x2 = min(
+                float(transform.original_width),
+                max(0.0, float(x + w / 2 - transform.pad_x) / transform.scale),
+            )
+            y2 = min(
+                float(transform.original_height),
+                max(0.0, float(y + h / 2 - transform.pad_y) / transform.scale),
+            )
+            if x2 <= x1 or y2 <= y1:
+                continue
             label = self.config.class_names[class_id] if class_id < len(self.config.class_names) else "unknown"
             detections.append(
                 {
