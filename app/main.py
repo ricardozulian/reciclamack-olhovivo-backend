@@ -21,6 +21,7 @@ from starlette.responses import JSONResponse, Response
 from .cleanup import cleanup_loop
 from .config import Settings, get_settings
 from .content import ContentStore, normalize_class_name
+from .detection_policy import collapse_cross_class_duplicates
 from .inference import DetectorConfig, OnnxDetector
 from .repository import RequestRepository
 from .schemas import AnalyzeImageResponse, ClassHint, ClassesResponse, GuidanceItem, HealthResponse
@@ -185,6 +186,7 @@ def _filter_v1_detections(
         and str(detection.get("class_name", "")).lower() in supported_classes
     ]
     eligible.sort(key=lambda item: float(item.get("confidence", 0.0)), reverse=True)
+    eligible = collapse_cross_class_duplicates(eligible)
     if max_response_detections > 0:
         return eligible[:max_response_detections]
     return eligible
