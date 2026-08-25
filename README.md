@@ -57,6 +57,10 @@ inference change.
 - `CORS_ALLOW_ORIGINS`: comma-separated allowed origins.
 - `RATE_LIMIT_ANALYZE_PER_MINUTE`: per-IP limit for `POST /v1/analyze-image`. Default: `30`.
 - `MAX_RESPONSE_DETECTIONS`: maximum detections in one response. Default: `8`.
+- `DOMINANT_OBJECT_GATE_ENABLED`: enables the totem response gate. Default: off.
+- `DOMINANT_OBJECT_MIN_AREA_RATIO`: minimum dominant box area. Default: `0.20`.
+- `DOMINANT_OBJECT_MIN_RELATIVE_AREA_RATIO`: minimum box area relative to the dominant box. Default: `0.25`.
+- `DOMINANT_OBJECT_MIN_ABSOLUTE_AREA_RATIO`: minimum box area in the source image. Default: `0.05`.
 - `ENABLE_API_DOCS`: enables `/docs`, `/redoc`, and `/openapi.json`. Default: off.
 
 ## Main API contract
@@ -120,3 +124,7 @@ The totem preview stays in Chromium on the Jetson.
 Each user action sends one image to the local API. The system does not send continuous camera video.
 
 Stored predictions and sidecars are unaudited automatic results.
+
+The Orin totem enables a dominant-object response gate. The gate reduces small
+false positives in centered, single-object photos. Stored sidecars keep the
+pre-gate supported predictions for model review.

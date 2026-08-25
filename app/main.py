@@ -21,7 +21,7 @@ from starlette.responses import JSONResponse, Response
 from .cleanup import cleanup_loop
 from .config import Settings, get_settings
 from .content import ContentStore, normalize_class_name
-from .detection_policy import collapse_cross_class_duplicates
+from .detection_policy import collapse_cross_class_duplicates, retain_dominant_detections
 from .inference import DetectorConfig, OnnxDetector
 from .repository import RequestRepository
 from .schemas import AnalyzeImageResponse, ClassHint, ClassesResponse, GuidanceItem, HealthResponse
@@ -386,7 +386,17 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             min_confidence=app_settings.min_confidence,
             max_response_detections=app_settings.max_response_detections,
         )
-        uncertainty_flag = len(filtered) == 0
+        image_size = _image_size(payload)
+        response_filtered = filtered
+        if app_settings.dominant_object_gate_enabled and image_size is not None:
+            response_filtered = retain_dominant_detections(
+                filtered,
+                image_size,
+                min_dominant_area_ratio=app_settings.dominant_object_min_area_ratio,
+                min_relative_area_ratio=app_settings.dominant_object_min_relative_area_ratio,
+                min_absolute_area_ratio=app_settings.dominant_object_min_absolute_area_ratio,
+            )
+        uncertainty_flag = len(response_filtered) == 0
         next_best_action = (
             "Não foi possível identificar com boa confiança. Tente outra foto com melhor iluminação."
             if uncertainty_flag
@@ -396,7 +406,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         seen: set[str] = set()
         guidance: list[GuidanceItem] = []
         response_detections: list[dict[str, object]] = []
-        for detection in filtered:
+        for detection in response_filtered:
             class_name = detection["class_name"]
             response_detections.append(
                 {
@@ -421,9 +431,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 )
             )
 
-        image_size = _image_size(payload)
         label_content = _dataset_label_content(
-            response_detections,
+            filtered,
             image_size,
             inference_failed,
         )

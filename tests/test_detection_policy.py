@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from app.detection_policy import collapse_cross_class_duplicates
+from app.detection_policy import collapse_cross_class_duplicates, retain_dominant_detections
 from app.main import _filter_v1_detections
 
 
@@ -76,3 +76,48 @@ def test_response_limit_is_applied_after_cross_class_collapse() -> None:
         "battery",
         "cable",
     ]
+
+
+def test_dominant_gate_removes_small_totem_false_positives() -> None:
+    dominant = _detection("mobile_phone_tablet", 0.90, (10, 10, 90, 90))
+    large_noise = _detection("cable", 0.80, (80, 0, 100, 75))
+    small_noise = _detection("battery", 0.70, (0, 0, 10, 10))
+
+    result = retain_dominant_detections(
+        [dominant, large_noise, small_noise],
+        (100, 100),
+        min_dominant_area_ratio=0.20,
+        min_relative_area_ratio=0.25,
+        min_absolute_area_ratio=0.05,
+    )
+
+    assert result == [dominant]
+
+
+def test_dominant_gate_keeps_multiple_large_objects() -> None:
+    dominant = _detection("flat_monitor", 0.90, (0, 0, 100, 50))
+    secondary = _detection("keyboard", 0.80, (0, 60, 100, 75))
+
+    result = retain_dominant_detections(
+        [dominant, secondary],
+        (100, 100),
+        min_dominant_area_ratio=0.20,
+        min_relative_area_ratio=0.25,
+        min_absolute_area_ratio=0.05,
+    )
+
+    assert result == [dominant, secondary]
+
+
+def test_dominant_gate_requests_a_new_image_without_a_large_object() -> None:
+    detections = [_detection("battery", 0.90, (0, 0, 40, 40))]
+
+    result = retain_dominant_detections(
+        detections,
+        (100, 100),
+        min_dominant_area_ratio=0.20,
+        min_relative_area_ratio=0.25,
+        min_absolute_area_ratio=0.05,
+    )
+
+    assert result == []

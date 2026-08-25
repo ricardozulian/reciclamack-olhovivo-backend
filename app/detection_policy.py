@@ -8,6 +8,43 @@ CROSS_CLASS_DUPLICATE_IOU = 0.90
 CROSS_CLASS_MUTUAL_COVERAGE = 0.95
 
 
+def _box_area_ratio(
+    detection: Mapping[str, Any],
+    image_size: tuple[int, int],
+) -> float:
+    box = _box_coordinates(detection)
+    image_width, image_height = image_size
+    if box is None or image_width <= 0 or image_height <= 0:
+        return 0.0
+    x1, y1, x2, y2 = box
+    clipped_x1 = min(max(x1, 0.0), float(image_width))
+    clipped_y1 = min(max(y1, 0.0), float(image_height))
+    clipped_x2 = min(max(x2, 0.0), float(image_width))
+    clipped_y2 = min(max(y2, 0.0), float(image_height))
+    box_area = max(0.0, clipped_x2 - clipped_x1) * max(0.0, clipped_y2 - clipped_y1)
+    return box_area / float(image_width * image_height)
+
+
+def retain_dominant_detections(
+    detections: Sequence[dict[str, object]],
+    image_size: tuple[int, int],
+    *,
+    min_dominant_area_ratio: float,
+    min_relative_area_ratio: float,
+    min_absolute_area_ratio: float,
+) -> list[dict[str, object]]:
+    """Keep large detections when one object dominates a totem image."""
+    ranked_areas = [(_box_area_ratio(item, image_size), item) for item in detections]
+    dominant_area = max((area for area, _ in ranked_areas), default=0.0)
+    if dominant_area < min_dominant_area_ratio:
+        return []
+    minimum_area = max(
+        min_absolute_area_ratio,
+        dominant_area * min_relative_area_ratio,
+    )
+    return [item for area, item in ranked_areas if area >= minimum_area]
+
+
 def _box_coordinates(detection: Mapping[str, Any]) -> tuple[float, float, float, float] | None:
     bbox = detection.get("bbox")
     if not isinstance(bbox, Mapping):

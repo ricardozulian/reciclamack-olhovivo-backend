@@ -487,6 +487,49 @@ def test_analyze_image_returns_all_supported_object_instances(tmp_path: Path) ->
     assert [item["class_name"] for item in body["guidance"]] == ["battery", "cable"]
 
 
+def test_totem_gate_keeps_raw_predictions_in_the_sidecar(tmp_path: Path) -> None:
+    settings = replace(
+        _settings(tmp_path),
+        dominant_object_gate_enabled=True,
+        dominant_object_min_area_ratio=0.20,
+        dominant_object_min_relative_area_ratio=0.25,
+        dominant_object_min_absolute_area_ratio=0.05,
+    )
+    app = create_app(settings)
+    client = TestClient(app)
+
+    app.state.detector.ready = True
+    app.state.detector.model_version = "test-model"
+    app.state.detector.predict = lambda _payload: [
+        {
+            "class_id": 3,
+            "class_name": "mobile_phone_tablet",
+            "confidence": 0.96,
+            "bbox": {"x1": 10, "y1": 10, "x2": 90, "y2": 90},
+        },
+        {
+            "class_id": 1,
+            "class_name": "cable",
+            "confidence": 0.80,
+            "bbox": {"x1": 0, "y1": 0, "x2": 10, "y2": 10},
+        },
+    ]
+
+    resp = client.post(
+        "/v1/analyze-image",
+        files={"file": ("img.png", _png(width=100, height=100), "image/png")},
+    )
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert [item["class_name"] for item in body["detections"]] == ["mobile_phone_tablet"]
+    sidecar = (settings.uploads_dir / f"{body['request_id']}.txt").read_text(encoding="utf-8")
+    assert sidecar.splitlines() == [
+        "3 0.500000 0.500000 0.800000 0.800000",
+        "1 0.050000 0.050000 0.100000 0.100000",
+    ]
+
+
 def test_analyze_image_reports_exif_transposed_dimensions(tmp_path: Path) -> None:
     output = io.BytesIO()
     image = Image.new("RGB", (40, 20), color=(255, 255, 255))
