@@ -46,24 +46,21 @@ MODEL_CLASS_ALIASES = {
 
 
 def _client_ip(request: Request) -> str:
-    cloudfront_viewer = request.headers.get("cloudfront-viewer-address", "").strip()
-    if cloudfront_viewer:
-        host = cloudfront_viewer.rsplit(":", 1)[0].strip("[]")
-        if host:
-            return host
+    cloudflare_client = request.headers.get("cf-connecting-ip", "").strip()
+    if cloudflare_client:
+        try:
+            return str(ipaddress.ip_address(cloudflare_client))
+        except ValueError:
+            pass
 
     forwarded = request.headers.get("x-forwarded-for", "")
     if forwarded:
         candidates = [part.strip() for part in forwarded.split(",") if part.strip()]
         for candidate in reversed(candidates):
             try:
-                ip = ipaddress.ip_address(candidate)
+                return str(ipaddress.ip_address(candidate))
             except ValueError:
                 continue
-            if not ip.is_private and not ip.is_loopback and not ip.is_link_local:
-                return candidate
-        if candidates:
-            return candidates[-1]
     return request.client.host if request.client else "unknown"
 
 

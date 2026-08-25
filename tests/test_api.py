@@ -235,41 +235,51 @@ def test_analyze_image_rate_limit_is_opt_in(tmp_path: Path) -> None:
     assert second.status_code == 429
 
 
-def test_rate_limit_client_ip_uses_proxy_appended_address(tmp_path: Path) -> None:
-    app = create_app(_settings(tmp_path))
-    client = TestClient(app)
-
-    @app.get("/client-ip")
-    def client_ip(request: Request) -> dict[str, str]:
-        return {"client_ip": _client_ip(request)}
-
-    resp = client.get(
-        "/client-ip",
-        headers={"x-forwarded-for": "10.0.0.9, 172.31.0.3, 8.8.8.8"},
+def _request_with_forwarding_headers(**headers: str) -> Request:
+    return Request(
+        {
+            "type": "http",
+            "headers": [
+                (name.replace("_", "-").encode("ascii"), value.encode("ascii"))
+                for name, value in headers.items()
+            ],
+            "client": ("172.18.0.2", 12345),
+        }
     )
 
-    assert resp.status_code == 200
-    assert resp.json()["client_ip"] == "8.8.8.8"
 
-
-def test_rate_limit_client_ip_prefers_cloudfront_viewer_address(tmp_path: Path) -> None:
-    app = create_app(_settings(tmp_path))
-    client = TestClient(app)
-
-    @app.get("/client-ip")
-    def client_ip(request: Request) -> dict[str, str]:
-        return {"client_ip": _client_ip(request)}
-
-    resp = client.get(
-        "/client-ip",
-        headers={
-            "cloudfront-viewer-address": "2001:4860:4860::8888:443",
-            "x-forwarded-for": "1.2.3.4",
-        },
+def test_rate_limit_client_ip_uses_proxy_appended_address() -> None:
+    request = _request_with_forwarding_headers(
+        x_forwarded_for="10.0.0.9, 172.31.0.3, 8.8.8.8"
     )
 
-    assert resp.status_code == 200
-    assert resp.json()["client_ip"] == "2001:4860:4860::8888"
+    assert _client_ip(request) == "8.8.8.8"
+
+
+def test_rate_limit_client_ip_keeps_lan_client_address() -> None:
+    request = _request_with_forwarding_headers(
+        x_forwarded_for="8.8.8.8, 192.168.1.44"
+    )
+
+    assert _client_ip(request) == "192.168.1.44"
+
+
+def test_rate_limit_client_ip_prefers_cloudflare_connecting_ip() -> None:
+    request = _request_with_forwarding_headers(
+        cf_connecting_ip="2001:4860:4860::8888",
+        x_forwarded_for="1.2.3.4, 172.18.0.3",
+    )
+
+    assert _client_ip(request) == "2001:4860:4860::8888"
+
+
+def test_rate_limit_client_ip_rejects_invalid_cloudflare_address() -> None:
+    request = _request_with_forwarding_headers(
+        cf_connecting_ip="not-an-ip",
+        x_forwarded_for="203.0.113.8, 192.168.1.44",
+    )
+
+    assert _client_ip(request) == "192.168.1.44"
 
 
 def test_analyze_image_response_shape(tmp_path: Path) -> None:
