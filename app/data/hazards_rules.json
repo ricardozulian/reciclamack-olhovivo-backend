@@ -218,6 +218,7 @@
         "alto-falante",
         "placa eletronica",
         "bateria",
+        "tela",
         "plasticos"
       ],
       "disposal_instructions_br": [
@@ -510,7 +511,7 @@
       ]
     },
     {
-      "class_name": "home_theater",
+      "class_name": "av_equipment",
       "display_label_pt_br": "equipamento de áudio e vídeo",
       "hazard_level": "medio",
       "health_risks": "fontes e componentes internos podem conter materiais nocivos",

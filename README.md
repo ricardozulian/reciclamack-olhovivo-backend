@@ -1,71 +1,88 @@
-# ReciclaMack Olho Vivo — Backend
+# ReciclaMack Olho Vivo Backend
 
-API do projeto de extensão universitária **Olho Vivo — Identificação de Resíduos Eletroeletrônicos por Visão Computacional**, desenvolvido no âmbito da Universidade Presbiteriana Mackenzie, Faculdade de Computação e Informática (FCI).
+This repository contains the API for the ReciclaMack university extension project.
 
-O backend recebe imagens enviadas pelo frontend, executa inferência com modelo YOLO11 exportado para ONNX e retorna detecções, orientações ambientais e pontos de coleta relacionados ao descarte correto de resíduos eletroeletrônicos.
+The backend receives images, runs YOLO11 ONNX inference, and returns detections and disposal guidance.
 
-## Contexto acadêmico
+## Academic context
 
-- Instituição: Universidade Presbiteriana Mackenzie
-- Unidade: Faculdade de Computação e Informática (FCI)
-- Área temática: Meio Ambiente, Tecnologia e Produção, Educação Ambiental
-- Linha de extensão: Gestão de Resíduos Sólidos e Educação para a Sustentabilidade
-- Coordenação/orientação: Profa. Sandra Bozolan
+- Institution: Universidade Presbiteriana Mackenzie
+- School: Faculdade de Computação e Informática (FCI)
+- Coordinator: Professor Sandra Bozolan
 
-## Equipe discente
+## Student team
 
 - Ricardo Zulian de Souza Amaral
 - Marcos Volponi Cervan
 - Flavio Estevam Nogueira Andrade
 
-## Escopo técnico
+## Technical scope
 
-- API REST em Python com FastAPI.
-- Inferência local em CPU usando ONNX Runtime.
-- Modelo runtime padrão de teste v2 em `app/model/yolo11s_ewaste_v2_25class_512.onnx`.
-- Conteúdo ambiental em JSON.
-- Registro operacional leve em SQLite.
-- Retenção configurável de imagens enviadas, com rótulos `.txt` pareados em formato YOLO para depuração e evolução do modelo.
+- Python REST API with FastAPI.
+- CPU inference with ONNX Runtime.
+- Default test model: `app/model/yolo11s_ewaste_v2_25class_512.onnx`.
+- Environmental guidance in JSON.
+- Operational metadata in SQLite.
+- Configurable image retention with matching YOLO sidecar files.
 
-## Variáveis de ambiente
+## Inference geometry
 
-- `MODEL_PATH`: caminho do modelo ONNX. Para teste v2: `backend/app/model/yolo11s_ewaste_v2_25class_512.onnx`.
-- `MODEL_CLASSES_PATH`: ordem de classes do modelo. Para v2 512: `backend/app/model/ewaste_v2_25class.classes.txt`.
-- `HAZARDS_PATH`: conteúdo ambiental. Para v2 25 classes: `backend/app/data/hazards_rules_v2_25class.json`.
-- `COLLECTION_POINTS_PATH`: base de pontos de coleta.
-- `UPLOADS_DIR`: diretório temporário de uploads.
-- `SQLITE_PATH`: banco SQLite operacional.
-- `IMAGE_RETENTION_MODE`: política de retenção. `ttl` apaga após o prazo; `keep` preserva as imagens e os `.txt` pareados para depuração e treinamento. Padrão: `ttl`.
-- `IMAGE_RETENTION_HOURS`: retenção de imagens quando `IMAGE_RETENTION_MODE=ttl`. Padrão: `24`.
-- `CLEANUP_INTERVAL_SECONDS`: intervalo da limpeza. Padrão: `3600`.
-- `MIN_CONFIDENCE`: confiança mínima. Padrão: `0.40`.
-- `NMS_IOU`: limiar de NMS. Padrão: `0.45`.
-- `INPUT_SIZE`: tamanho de entrada do modelo. Para v2 512: `512`.
-- `MAX_UPLOAD_MB`: tamanho máximo de upload. Padrão: `10`.
-- `CORS_ALLOW_ORIGINS`: origens permitidas, separadas por vírgula.
-- `RATE_LIMIT_ANALYZE_PER_MINUTE`: limite por IP para `POST /v1/analyze-image`. Padrão: `30`.
-- `ENABLE_API_DOCS`: habilita `/docs`, `/redoc` e `/openapi.json` quando definido como `1`, `true`, `yes` ou `on`. Padrão: desabilitado.
+The current backend uses centered letterbox preprocessing. It preserves the
+oriented source aspect ratio and uses `(114, 114, 114)` padding.
 
-## Contrato principal da API
+The backend removes the padding from output coordinates. It divides coordinates
+by the letterbox scale and clamps each box to the source image.
 
-Endpoint:
+The active comparison settings are confidence `0.40`, NMS IoU `0.45`, and a
+maximum of eight detections. Direct `512 x 512` resize is a legacy policy.
+
+Read `../documentation/inference_preprocessing_policy.md` before a model or
+inference change.
+
+## Environment variables
+
+- `MODEL_PATH`: ONNX model path.
+- `MODEL_CLASSES_PATH`: class file path and output order.
+- `HAZARDS_PATH`: environmental guidance file.
+- `COLLECTION_POINTS_PATH`: collection point database.
+- `UPLOADS_DIR`: temporary upload directory.
+- `SQLITE_PATH`: operational SQLite database.
+- `IMAGE_RETENTION_MODE`: `ttl` removes expired files. `keep` retains image and sidecar pairs.
+- `IMAGE_RETENTION_HOURS`: image lifetime in `ttl` mode. Default: `24`.
+- `CLEANUP_INTERVAL_SECONDS`: cleanup interval. Default: `3600`.
+- `MIN_CONFIDENCE`: minimum confidence. Default: `0.40`.
+- `NMS_IOU`: NMS threshold. Default: `0.45`.
+- `INPUT_SIZE`: model input size. The v2 model uses `512`.
+- `MAX_UPLOAD_MB`: maximum upload size. Default: `10`.
+- `CORS_ALLOW_ORIGINS`: comma-separated allowed origins.
+- `RATE_LIMIT_ANALYZE_PER_MINUTE`: per-IP limit for `POST /v1/analyze-image`. Default: `30`.
+- `MAX_RESPONSE_DETECTIONS`: maximum detections in one response. Default: `8`.
+- `ENABLE_API_DOCS`: enables `/docs`, `/redoc`, and `/openapi.json`. Default: off.
+
+## Main API contract
 
 ```text
 POST /v1/analyze-image
 ```
 
-Campos principais da resposta:
+The main response fields are:
 
 - `request_id`
 - `model_version`
 - `content_version`
 - `processed_at`
-- `detections[]`: `class_id`, `class_name`, `confidence`, `bbox`
-- `guidance[]`: `class_name`, `typical_contents`, `hazard_summary`, `disposal_steps`, `legal_basis`
+- `image_width`
+- `image_height`
+- `detections[]`
+- `guidance[]`
 - `uncertainty_flag`
 - `next_best_action`
 
-## Executar localmente
+Detection boxes use pixel coordinates from the oriented display image.
+
+The frontend draws the boxes on the oriented display image.
+
+## Run locally
 
 ```powershell
 python -m venv .venv
@@ -74,31 +91,32 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 ```
 
-## Testes
+## Run tests
 
 ```powershell
 python -m pytest
 ```
 
-## Papel no sistema
+## Docker integration environment
 
-Este repositório é autônomo e contém apenas a API de inferência e conteúdo ambiental. O frontend e o pipeline de treinamento ficam em repositórios separados.
-
-## Ambiente Docker de integração
-
-A bancada reproduzível vigente está em `../deploy/local`; execute o comando abaixo a partir da raiz do workspace. Ela publica a interface em `http://192.168.1.51:8088`, a API em `http://192.168.1.51:8000` e monta o ONNX e seu arquivo de classes somente para leitura.
+Run the Docker test host from the workspace root:
 
 ```powershell
 .\deploy\local\run_model.ps1
 ```
 
-Os padrões internos da aplicação continuam sendo retenção de 24 horas e limpeza por hora. O Compose local e o pacote Jetson substituem explicitamente esses valores por `168` horas e `86400` segundos, respectivamente. O ambiente local também habilita `/docs` e desabilita o rate limiting apenas para testes na LAN.
+The local Compose file sets a seven-day TTL and a one-day cleanup interval.
 
-No runtime, o identificador legado `home_theater` é aceito e normalizado para o nome canônico `av_equipment`, preservando a classe ID 24. A troca e a promoção de modelos são responsabilidade da camada de implantação e da sessão de treinamento; consulte `../deploy/MODEL_TEST_HANDOFF.md`.
+It enables API documentation and disables rate limits only for LAN tests.
 
+The runtime normalizes `home_theater` to `av_equipment` and keeps class ID 24.
 
-## API v0.2.0 e imagens anotadas
+Read `../deploy/MODEL_TEST_HANDOFF.md` before a model change.
 
-A resposta de `POST /v1/analyze-image` inclui `image_width`, `image_height` e todas as detecções válidas após o NMS, limitada por `MAX_RESPONSE_DETECTIONS` (padrão: `8`). As caixas usam coordenadas em pixels da imagem orientada para exibição. O frontend desenha as caixas sobre a própria foto; a API não cria uma segunda cópia anotada.
+## Totem behavior
 
-A prévia do totem permanece no navegador conectado localmente ao Jetson. Somente uma foto é enviada à API por interação, sem transmissão contínua de vídeo. As previsões e os rótulos auxiliares persistidos continuam sendo resultados automáticos não auditados.
+The totem preview stays in Chromium on the Jetson.
+
+Each user action sends one image to the local API. The system does not send continuous camera video.
+
+Stored predictions and sidecars are unaudited automatic results.
