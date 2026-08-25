@@ -5,9 +5,9 @@ from dataclasses import dataclass
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parents[1]
-DEFAULT_MODEL_PATH = BASE_DIR / "app" / "model" / "yolo11n_ewaste.onnx"
-DEFAULT_MODEL_CLASSES_PATH = BASE_DIR / "app" / "model" / "yolo11n_ewaste_v1.classes.txt"
-DEFAULT_HAZARDS_PATH = BASE_DIR / "app" / "data" / "hazards_rules.json"
+DEFAULT_MODEL_PATH = BASE_DIR / "app" / "model" / "yolo11s_ewaste_v2_25class_512.onnx"
+DEFAULT_MODEL_CLASSES_PATH = BASE_DIR / "app" / "model" / "ewaste_v2_25class.classes.txt"
+DEFAULT_HAZARDS_PATH = BASE_DIR / "app" / "data" / "hazards_rules_v2_25class.json"
 DEFAULT_COLLECTION_PATH = BASE_DIR / "app" / "data" / "collection_points_sp.json"
 DEFAULT_UPLOADS_DIR = BASE_DIR / "app" / "uploads"
 DEFAULT_SQLITE_PATH = BASE_DIR / "app" / "reciclamack.db"
@@ -27,7 +27,7 @@ class Settings:
     cleanup_interval_seconds: int = 3600
     min_confidence: float = 0.40
     nms_iou: float = 0.45
-    input_size: int = 640
+    input_size: int = 512
     max_upload_mb: int = 10
     cors_allow_origins: tuple[str, ...] = ()
     rate_limit_analyze_per_minute: int = 30
@@ -57,7 +57,7 @@ def get_settings() -> Settings:
         cleanup_interval_seconds=int(os.getenv("CLEANUP_INTERVAL_SECONDS", "3600")),
         min_confidence=float(os.getenv("MIN_CONFIDENCE", "0.40")),
         nms_iou=float(os.getenv("NMS_IOU", "0.45")),
-        input_size=int(os.getenv("INPUT_SIZE", "640")),
+        input_size=int(os.getenv("INPUT_SIZE", "512")),
         max_upload_mb=int(os.getenv("MAX_UPLOAD_MB", "10")),
         cors_allow_origins=cors_origins,
         rate_limit_analyze_per_minute=int(os.getenv("RATE_LIMIT_ANALYZE_PER_MINUTE", "30")),

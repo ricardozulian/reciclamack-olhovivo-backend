@@ -41,16 +41,19 @@ V2_25CLASS_MODEL_CLASSES = [
 
 
 def _settings(tmp_path: Path) -> Settings:
-    hazards_path = Path(__file__).resolve().parents[1] / "app" / "data" / "hazards_rules.json"
-    collection_path = Path(__file__).resolve().parents[1] / "app" / "data" / "collection_points_sp.json"
+    app_path = Path(__file__).resolve().parents[1] / "app"
+    hazards_path = app_path / "data" / "hazards_rules.json"
+    collection_path = app_path / "data" / "collection_points_sp.json"
     return Settings(
         model_path=tmp_path / "missing.onnx",
+        model_classes_path=app_path / "model" / "yolo11n_ewaste_v1.classes.txt",
         hazards_path=hazards_path,
         collection_points_path=collection_path,
         uploads_dir=tmp_path / "uploads",
         sqlite_path=tmp_path / "requests.db",
         image_retention_mode="ttl",
         cleanup_interval_seconds=9999,
+        input_size=640,
     )
 
 

@@ -22,4 +22,4 @@ headset
 microphone
 smart_watch
 home_appliance
-home_theater
+av_equipment

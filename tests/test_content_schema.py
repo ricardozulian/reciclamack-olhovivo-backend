@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from app.content import normalize_class_name
+
 
 V2_CANONICAL_CLASSES = [
     "battery",
@@ -27,7 +29,7 @@ V2_CANONICAL_CLASSES = [
     "remote",
     "power_tool",
     "clock_radio",
-    "home_theater",
+    "av_equipment",
     "headset",
     "microphone",
     "smart_watch",
@@ -58,7 +60,7 @@ V2_25CLASS_MODEL_CLASSES = [
     "microphone",
     "smart_watch",
     "home_appliance",
-    "home_theater",
+    "av_equipment",
 ]
 
 
@@ -88,14 +90,23 @@ def test_hazards_entries_have_legal_references() -> None:
         for line in classes_path.read_text(encoding="utf-8").splitlines()
         if line.strip() and not line.strip().startswith("#")
     ]
-    assert sorted(set(class_names)) == sorted(set(model_classes))
-    assert sorted(set(class_names)) == sorted(V2_CANONICAL_CLASSES)
+    canonical_content_classes = {
+        normalize_class_name(class_name) for class_name in class_names
+    }
+    canonical_model_classes = {
+        normalize_class_name(class_name) for class_name in model_classes
+    }
+    assert canonical_content_classes == canonical_model_classes
+    assert canonical_content_classes == set(V2_CANONICAL_CLASSES)
 
 
 def test_every_v2_class_has_complete_return_card_content() -> None:
     hazards_path = Path(__file__).resolve().parents[1] / "app" / "data" / "hazards_rules.json"
     payload = json.loads(hazards_path.read_text(encoding="utf-8"))
-    cards = {item["class_name"]: item for item in payload["classes"]}
+    cards = {
+        normalize_class_name(item["class_name"]): item
+        for item in payload["classes"]
+    }
 
     assert sorted(cards) == sorted(V2_CANONICAL_CLASSES)
     for class_name in V2_CANONICAL_CLASSES:
@@ -107,7 +118,7 @@ def test_every_v2_class_has_complete_return_card_content() -> None:
         assert len(card["disposal_instructions_br"]) >= 3
         assert len(card["legal_references"]) >= 2
 
-    assert cards["home_theater"]["display_label_pt_br"] == "equipamento de áudio e vídeo"
+    assert cards["av_equipment"]["display_label_pt_br"] == "equipamento de áudio e vídeo"
 
 
 def test_v2_25class_runtime_content_matches_model_order() -> None:
@@ -116,7 +127,10 @@ def test_v2_25class_runtime_content_matches_model_order() -> None:
     classes_path = base / "model" / "ewaste_v2_25class.classes.txt"
 
     payload = json.loads(hazards_path.read_text(encoding="utf-8"))
-    content_classes = [item["class_name"] for item in payload["classes"]]
+    content_classes = [
+        normalize_class_name(item["class_name"])
+        for item in payload["classes"]
+    ]
     model_classes = [
         line.strip()
         for line in classes_path.read_text(encoding="utf-8").splitlines()
