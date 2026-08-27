@@ -30,19 +30,15 @@ def retain_dominant_detections(
     image_size: tuple[int, int],
     *,
     min_dominant_area_ratio: float,
-    min_relative_area_ratio: float,
-    min_absolute_area_ratio: float,
 ) -> list[dict[str, object]]:
-    """Keep large detections when one object dominates a totem image."""
+    """Keep only the largest detection when one object dominates the image."""
     ranked_areas = [(_box_area_ratio(item, image_size), item) for item in detections]
-    dominant_area = max((area for area, _ in ranked_areas), default=0.0)
+    if not ranked_areas:
+        return []
+    dominant_area, dominant_detection = max(ranked_areas, key=lambda entry: entry[0])
     if dominant_area < min_dominant_area_ratio:
         return []
-    minimum_area = max(
-        min_absolute_area_ratio,
-        dominant_area * min_relative_area_ratio,
-    )
-    return [item for area, item in ranked_areas if area >= minimum_area]
+    return [dominant_detection]
 
 
 def _box_coordinates(detection: Mapping[str, Any]) -> tuple[float, float, float, float] | None:

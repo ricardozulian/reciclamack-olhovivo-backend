@@ -354,7 +354,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         )
 
     @app.post("/v1/analyze-image", response_model=AnalyzeImageResponse)
-    async def analyze_image(file: UploadFile = File(...)) -> AnalyzeImageResponse:
+    async def analyze_image(
+        file: UploadFile = File(...),
+        persist: bool = True,
+    ) -> AnalyzeImageResponse:
         content_type = file.content_type or ""
         if not content_type.startswith("image/"):
             raise HTTPException(status_code=400, detail="Arquivo deve ser uma imagem.")
@@ -368,7 +371,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
         request_id = str(uuid.uuid4())
         ext = Path(file.filename or "").suffix.lower() or ".jpg"
-        stored_path, expires_at = storage.save(request_id, payload, ext)
+        stored_path: Path | None = None
+        expires_at: str | None = None
+        if persist:
+            stored_path, expires_at = storage.save(request_id, payload, ext)
 
         started = time.perf_counter()
         inference_failed = False
@@ -393,8 +399,6 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 filtered,
                 image_size,
                 min_dominant_area_ratio=app_settings.dominant_object_min_area_ratio,
-                min_relative_area_ratio=app_settings.dominant_object_min_relative_area_ratio,
-                min_absolute_area_ratio=app_settings.dominant_object_min_absolute_area_ratio,
             )
         uncertainty_flag = len(response_filtered) == 0
         next_best_action = (
@@ -431,27 +435,28 @@ def create_app(settings: Settings | None = None) -> FastAPI:
                 )
             )
 
-        label_content = _dataset_label_content(
-            filtered,
-            image_size,
-            inference_failed,
-        )
-        try:
-            storage.save_label(stored_path, label_content)
-        except Exception:
-            logger.exception("Failed to persist dataset label for request_id=%s", request_id)
-
-        try:
-            repository.insert_request(
-                request_id=request_id,
-                stored_path=stored_path.as_posix(),
-                expires_at=expires_at,
-                retention_mode=app_settings.image_retention_mode,
-                model_version=detector.model_version,
-                inference_ms=inference_ms,
+        if stored_path is not None:
+            label_content = _dataset_label_content(
+                filtered,
+                image_size,
+                inference_failed,
             )
-        except Exception:
-            logger.exception("Failed to persist request metadata for request_id=%s", request_id)
+            try:
+                storage.save_label(stored_path, label_content)
+            except Exception:
+                logger.exception("Failed to persist dataset label for request_id=%s", request_id)
+
+            try:
+                repository.insert_request(
+                    request_id=request_id,
+                    stored_path=stored_path.as_posix(),
+                    expires_at=expires_at,
+                    retention_mode=app_settings.image_retention_mode,
+                    model_version=detector.model_version,
+                    inference_ms=inference_ms,
+                )
+            except Exception:
+                logger.exception("Failed to persist request metadata for request_id=%s", request_id)
 
         return AnalyzeImageResponse(
             request_id=request_id,

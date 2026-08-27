@@ -59,8 +59,6 @@ inference change.
 - `MAX_RESPONSE_DETECTIONS`: maximum detections in one response. Default: `8`.
 - `DOMINANT_OBJECT_GATE_ENABLED`: enables the totem response gate. Default: off.
 - `DOMINANT_OBJECT_MIN_AREA_RATIO`: minimum dominant box area. Default: `0.20`.
-- `DOMINANT_OBJECT_MIN_RELATIVE_AREA_RATIO`: minimum box area relative to the dominant box. Default: `0.25`.
-- `DOMINANT_OBJECT_MIN_ABSOLUTE_AREA_RATIO`: minimum box area in the source image. Default: `0.05`.
 - `ENABLE_API_DOCS`: enables `/docs`, `/redoc`, and `/openapi.json`. Default: off.
 
 ## Main API contract
@@ -68,6 +66,8 @@ inference change.
 ```text
 POST /v1/analyze-image
 ```
+
+Use `persist=false` for a temporary totem probe. The API returns the result but does not store the image, sidecar, or request metadata.
 
 The main response fields are:
 

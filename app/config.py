@@ -34,8 +34,6 @@ class Settings:
     max_response_detections: int = 8
     dominant_object_gate_enabled: bool = False
     dominant_object_min_area_ratio: float = 0.20
-    dominant_object_min_relative_area_ratio: float = 0.25
-    dominant_object_min_absolute_area_ratio: float = 0.05
     enable_api_docs: bool = False
 
 
@@ -69,11 +67,5 @@ def get_settings() -> Settings:
         dominant_object_gate_enabled=os.getenv("DOMINANT_OBJECT_GATE_ENABLED", "").strip().lower()
         in {"1", "true", "yes", "on"},
         dominant_object_min_area_ratio=float(os.getenv("DOMINANT_OBJECT_MIN_AREA_RATIO", "0.20")),
-        dominant_object_min_relative_area_ratio=float(
-            os.getenv("DOMINANT_OBJECT_MIN_RELATIVE_AREA_RATIO", "0.25")
-        ),
-        dominant_object_min_absolute_area_ratio=float(
-            os.getenv("DOMINANT_OBJECT_MIN_ABSOLUTE_AREA_RATIO", "0.05")
-        ),
         enable_api_docs=os.getenv("ENABLE_API_DOCS", "").strip().lower() in {"1", "true", "yes", "on"},
     )

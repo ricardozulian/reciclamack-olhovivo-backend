@@ -305,6 +305,33 @@ def test_analyze_image_response_shape(tmp_path: Path) -> None:
         assert "display_label_pt_br" in item
 
 
+def test_analyze_image_probe_does_not_persist_files_or_metadata(tmp_path: Path) -> None:
+    settings = _settings(tmp_path)
+    app = create_app(settings)
+    client = TestClient(app)
+
+    app.state.detector.ready = True
+    app.state.detector.model_version = "test-model"
+    app.state.detector.predict = lambda _payload: [
+        {
+            "class_id": 0,
+            "class_name": "battery",
+            "confidence": 0.96,
+            "bbox": {"x1": 0, "y1": 0, "x2": 1, "y2": 1},
+        }
+    ]
+
+    resp = client.post(
+        "/v1/analyze-image?persist=false",
+        files={"file": ("probe.png", _png(), "image/png")},
+    )
+
+    assert resp.status_code == 200
+    assert resp.json()["detections"][0]["class_name"] == "battery"
+    assert app.state.repository.fetch_request(resp.json()["request_id"]) is None
+    assert list(settings.uploads_dir.iterdir()) == []
+
+
 def test_analyze_image_writes_dataset_label_for_classified_upload(tmp_path: Path) -> None:
     app = create_app(_settings(tmp_path))
     client = TestClient(app)
@@ -492,8 +519,6 @@ def test_totem_gate_keeps_raw_predictions_in_the_sidecar(tmp_path: Path) -> None
         _settings(tmp_path),
         dominant_object_gate_enabled=True,
         dominant_object_min_area_ratio=0.20,
-        dominant_object_min_relative_area_ratio=0.25,
-        dominant_object_min_absolute_area_ratio=0.05,
     )
     app = create_app(settings)
     client = TestClient(app)

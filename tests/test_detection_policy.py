@@ -87,14 +87,12 @@ def test_dominant_gate_removes_small_totem_false_positives() -> None:
         [dominant, large_noise, small_noise],
         (100, 100),
         min_dominant_area_ratio=0.20,
-        min_relative_area_ratio=0.25,
-        min_absolute_area_ratio=0.05,
     )
 
     assert result == [dominant]
 
 
-def test_dominant_gate_keeps_multiple_large_objects() -> None:
+def test_dominant_gate_keeps_only_the_largest_object() -> None:
     dominant = _detection("flat_monitor", 0.90, (0, 0, 100, 50))
     secondary = _detection("keyboard", 0.80, (0, 60, 100, 75))
 
@@ -102,11 +100,9 @@ def test_dominant_gate_keeps_multiple_large_objects() -> None:
         [dominant, secondary],
         (100, 100),
         min_dominant_area_ratio=0.20,
-        min_relative_area_ratio=0.25,
-        min_absolute_area_ratio=0.05,
     )
 
-    assert result == [dominant, secondary]
+    assert result == [dominant]
 
 
 def test_dominant_gate_requests_a_new_image_without_a_large_object() -> None:
@@ -116,8 +112,6 @@ def test_dominant_gate_requests_a_new_image_without_a_large_object() -> None:
         detections,
         (100, 100),
         min_dominant_area_ratio=0.20,
-        min_relative_area_ratio=0.25,
-        min_absolute_area_ratio=0.05,
     )
 
     assert result == []
