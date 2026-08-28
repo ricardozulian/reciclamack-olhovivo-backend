@@ -21,6 +21,7 @@ class DetectorConfig:
     confidence_threshold: float
     nms_iou: float
     class_names: list[str]
+    model_version: str | None = None
 
 
 @dataclass(frozen=True)
@@ -60,7 +61,7 @@ class OnnxDetector:
                 self._input_h = h_dim
             if isinstance(w_dim, int) and w_dim > 0:
                 self._input_w = w_dim
-        self.model_version = self.config.model_path.stem
+        self.model_version = self.config.model_version or self.config.model_path.stem
         self.ready = True
 
     def predict(self, image_bytes: bytes) -> list[dict[str, Any]]:

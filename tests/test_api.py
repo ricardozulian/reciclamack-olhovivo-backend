@@ -46,7 +46,7 @@ def _settings(tmp_path: Path) -> Settings:
     collection_path = app_path / "data" / "collection_points_sp.json"
     return Settings(
         model_path=tmp_path / "missing.onnx",
-        model_classes_path=app_path / "model" / "yolo11n_ewaste_v1.classes.txt",
+        model_classes_path=Path(__file__).resolve().parent / "fixtures_yolo11n_ewaste_v1.classes.txt",
         hazards_path=hazards_path,
         collection_points_path=collection_path,
         uploads_dir=tmp_path / "uploads",
@@ -133,7 +133,11 @@ def test_classes_endpoint_uses_v2_25class_runtime_pairing(tmp_path: Path) -> Non
     base = Path(__file__).resolve().parents[1] / "app"
     settings = replace(
         _settings(tmp_path),
-        model_classes_path=base / "model" / "ewaste_v2_25class.classes.txt",
+        model_classes_path=(
+            base
+            / "model"
+            / "v2_1_2_letterbox_enhanced_adamw_e0_512_yolo11s_epoch50.classes.txt"
+        ),
         hazards_path=base / "data" / "hazards_rules_v2_25class.json",
         input_size=512,
     )

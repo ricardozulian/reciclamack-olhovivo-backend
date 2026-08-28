@@ -67,7 +67,7 @@ V2_25CLASS_MODEL_CLASSES = [
 def test_hazards_entries_have_legal_references() -> None:
     base = Path(__file__).resolve().parents[1] / "app"
     hazards_path = base / "data" / "hazards_rules.json"
-    classes_path = base / "model" / "yolo11n_ewaste.classes.txt"
+    classes_path = Path(__file__).resolve().parent / "fixtures_yolo11n_ewaste.classes.txt"
 
     payload = json.loads(hazards_path.read_text(encoding="utf-8"))
     classes = payload["classes"]
@@ -124,7 +124,11 @@ def test_every_v2_class_has_complete_return_card_content() -> None:
 def test_v2_25class_runtime_content_matches_model_order() -> None:
     base = Path(__file__).resolve().parents[1] / "app"
     hazards_path = base / "data" / "hazards_rules_v2_25class.json"
-    classes_path = base / "model" / "ewaste_v2_25class.classes.txt"
+    classes_path = (
+        base
+        / "model"
+        / "v2_1_2_letterbox_enhanced_adamw_e0_512_yolo11s_epoch50.classes.txt"
+    )
 
     payload = json.loads(hazards_path.read_text(encoding="utf-8"))
     content_classes = [

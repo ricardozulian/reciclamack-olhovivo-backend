@@ -225,6 +225,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             confidence_threshold=app_settings.min_confidence,
             nms_iou=app_settings.nms_iou,
             class_names=model_class_names,
+            model_version=app_settings.model_version,
         )
     )
     detector.load()

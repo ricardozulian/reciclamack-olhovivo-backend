@@ -5,8 +5,18 @@ from dataclasses import dataclass
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parents[1]
-DEFAULT_MODEL_PATH = BASE_DIR / "app" / "model" / "yolo11s_ewaste_v2_25class_512.onnx"
-DEFAULT_MODEL_CLASSES_PATH = BASE_DIR / "app" / "model" / "ewaste_v2_25class.classes.txt"
+DEFAULT_MODEL_PATH = (
+    BASE_DIR
+    / "app"
+    / "model"
+    / "v2_1_2_letterbox_enhanced_adamw_e0_512_yolo11s_epoch50.onnx"
+)
+DEFAULT_MODEL_CLASSES_PATH = (
+    BASE_DIR
+    / "app"
+    / "model"
+    / "v2_1_2_letterbox_enhanced_adamw_e0_512_yolo11s_epoch50.classes.txt"
+)
 DEFAULT_HAZARDS_PATH = BASE_DIR / "app" / "data" / "hazards_rules_v2_25class.json"
 DEFAULT_COLLECTION_PATH = BASE_DIR / "app" / "data" / "collection_points_sp.json"
 DEFAULT_UPLOADS_DIR = BASE_DIR / "app" / "uploads"
@@ -17,6 +27,7 @@ DEFAULT_SQLITE_PATH = BASE_DIR / "app" / "reciclamack.db"
 class Settings:
     app_name: str = "ReciclaMack API"
     model_path: Path = DEFAULT_MODEL_PATH
+    model_version: str | None = None
     model_classes_path: Path = DEFAULT_MODEL_CLASSES_PATH
     hazards_path: Path = DEFAULT_HAZARDS_PATH
     collection_points_path: Path = DEFAULT_COLLECTION_PATH
@@ -49,6 +60,7 @@ def get_settings() -> Settings:
         retention_mode = "ttl"
     return Settings(
         model_path=Path(os.getenv("MODEL_PATH", str(DEFAULT_MODEL_PATH))),
+        model_version=os.getenv("MODEL_VERSION", "").strip() or None,
         model_classes_path=Path(os.getenv("MODEL_CLASSES_PATH", str(DEFAULT_MODEL_CLASSES_PATH))),
         hazards_path=Path(os.getenv("HAZARDS_PATH", str(DEFAULT_HAZARDS_PATH))),
         collection_points_path=Path(os.getenv("COLLECTION_POINTS_PATH", str(DEFAULT_COLLECTION_PATH))),

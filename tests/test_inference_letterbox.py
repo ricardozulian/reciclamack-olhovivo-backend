@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import io
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import pytest
@@ -14,6 +15,62 @@ def detector(input_size: int = 8) -> OnnxDetector:
     return OnnxDetector(
         DetectorConfig(Path("unused.onnx"), input_size, 0.40, 0.45, ["item"])
     )
+
+
+class FakeInput:
+    name = "images"
+    shape = [1, 3, 512, 512]
+
+
+class FakeSession:
+    def __init__(self, *_args: object, **_kwargs: object) -> None:
+        pass
+
+    def get_inputs(self) -> list[FakeInput]:
+        return [FakeInput()]
+
+
+def test_load_uses_explicit_model_version(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    model_path = tmp_path / "model.onnx"
+    model_path.write_bytes(b"test")
+    monkeypatch.setattr(
+        "app.inference.ort",
+        SimpleNamespace(InferenceSession=FakeSession),
+    )
+    configured = OnnxDetector(
+        DetectorConfig(
+            model_path,
+            512,
+            0.40,
+            0.45,
+            ["item"],
+            model_version="v2_1_2_letterbox_enhanced_adamw_e0_512_yolo11s_epoch50",
+        )
+    )
+
+    configured.load()
+
+    assert configured.model_version == (
+        "v2_1_2_letterbox_enhanced_adamw_e0_512_yolo11s_epoch50"
+    )
+
+
+def test_load_uses_filename_when_model_version_is_not_set(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    model_path = tmp_path / "model.onnx"
+    model_path.write_bytes(b"test")
+    monkeypatch.setattr(
+        "app.inference.ort",
+        SimpleNamespace(InferenceSession=FakeSession),
+    )
+    configured = OnnxDetector(
+        DetectorConfig(model_path, 512, 0.40, 0.45, ["item"])
+    )
+
+    configured.load()
+
+    assert configured.model_version == "model"
 
 
 def image_bytes(

@@ -20,7 +20,7 @@ The backend receives images, runs YOLO11 ONNX inference, and returns detections 
 
 - Python REST API with FastAPI.
 - CPU inference with ONNX Runtime.
-- Default test model: `app/model/yolo11s_ewaste_v2_25class_512.onnx`.
+- Default test model: `app/model/v2_1_2_letterbox_enhanced_adamw_e0_512_yolo11s_epoch50.onnx`.
 - Environmental guidance in JSON.
 - Operational metadata in SQLite.
 - Configurable image retention with matching YOLO sidecar files.
@@ -42,6 +42,7 @@ inference change.
 ## Environment variables
 
 - `MODEL_PATH`: ONNX model path.
+- `MODEL_VERSION`: canonical model identity. When empty, the API uses the ONNX filename stem.
 - `MODEL_CLASSES_PATH`: class file path and output order.
 - `HAZARDS_PATH`: environmental guidance file.
 - `COLLECTION_POINTS_PATH`: collection point database.
